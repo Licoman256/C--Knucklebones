@@ -1,11 +1,13 @@
 void renderField();
-void renderDiceSlots();
+float renderPlayerDiceSlots(float xStart, float yStart);
+
+using kFloat = const float;
 
 const int numberOfSlotRowsPerPlayer = 3;
 const int numberOfSlotColsPerPlayer = 3;
 
 //const int numberOfSlotsPerPlayer = numberOfSlotRowsPerPlayer * numberOfSlotColsPerPlayer;
-//const int numberOfPlayers = 2;
+const int numberOfPlayers = 2;
 
 
 const float xFieldOrigin{ -0.6f };
@@ -16,11 +18,14 @@ const float fieldHeight { 2.0f };
 
 
 const float xSlotOffsetCoeff  { 0.25f }; //const
-const float ySlotOffsetCoeff  { 0.25f }; //const
+const float ySlotOffsetCoeff  { 0.85f }; //const
 
-//                   all len *  / ((offset + slot len   )  * num of slots              + last offset    )
-const float xOffset{ fieldLen * xSlotOffsetCoeff / ((xSlotOffsetCoeff + 1) * numberOfSlotColsPerPlayer + xSlotOffsetCoeff) };
-const float yOffset{ fieldHeight * ySlotOffsetCoeff / ((ySlotOffsetCoeff + 1) * numberOfSlotRowsPerPlayer + ySlotOffsetCoeff)};
+constexpr float CalcOffset(const float f, const float coeff, const float numberOf) {
+    return f * coeff / ((coeff + 1) * numberOf + coeff);
+}
+
+const float xOffset{ CalcOffset(fieldLen,    xSlotOffsetCoeff, numberOfSlotRowsPerPlayer) };
+const float yOffset{ CalcOffset(fieldHeight, ySlotOffsetCoeff, numberOfSlotColsPerPlayer) / numberOfPlayers };
 
 
 const float xSlotOrigin { xFieldOrigin + xOffset};
