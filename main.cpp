@@ -9,7 +9,7 @@ int main(void) {
 
     /* Create a windowed mode window and its OpenGL context */
     Game game;
-    GLFWwindow* window = glfwCreateWindow(game.WINDOW_WIDTH, game.WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Field::WINDOW_WIDTH, Field::WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -19,21 +19,20 @@ int main(void) {
     glfwMakeContextCurrent(window);
 
     //tell opengl where to render
-    glViewport(0, 0, game.WINDOW_WIDTH, game.WINDOW_HEIGHT);
+    glViewport(0, 0, Field::WINDOW_WIDTH, Field::WINDOW_HEIGHT);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
-        //game.Render();
-        //game.Tick();
-        //ui.HandleCommands();
-        game.render();
+        game.Render();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
         /* Poll for and process events */
         glfwPollEvents();
+        //ui.HandleCommands();
+        //game.Tick();
     }
     glfwTerminate();
     return 0;

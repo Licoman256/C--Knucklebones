@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include "game.h"
 
-void Game::renderField() {
+void Field::Render() {
     //window background
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -12,7 +12,7 @@ void Game::renderField() {
 
     //slots
     float yStart = ySlotOrigin;
-    for (int i = 0; i < numberOfPlayers; i++) {
+    for (int i = 0; i < countPlayers; i++) {
         //shift start position to y of last slot of prev player
         yStart = renderPlayerDiceSlots(xSlotOrigin, yStart, colors::diceSlot[i]);
         //add additional spacing between players
@@ -20,14 +20,14 @@ void Game::renderField() {
     }  
 }
 
-float Game::renderPlayerDiceSlots(float xStart, float yStart, const MyColor& color) {
+float Field::renderPlayerDiceSlots(float xStart, float yStart, const MyColor& color) {
     //choose the color of slots
     glColor3f(color.red, color.green, color.blue);
 
     float yCur = yStart;
-    for (int i = 0; i < numberOfSlotColsPerPlayer; i++, yCur -= (slotHeight + yOffset)) {
+    for (int i = 0; i < countSlotColsPerPlayer; i++, yCur -= (slotHeight + yOffset)) {
         float xCur = xStart;
-        for (int j = 0; j < numberOfSlotRowsPerPlayer; j++, xCur += (slotLen + xOffset)) {
+        for (int j = 0; j < countSlotRowsPerPlayer; j++, xCur += (slotLen + xOffset)) {
             //render the slot
             glRectf(xCur,              
                     yCur,              

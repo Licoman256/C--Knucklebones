@@ -1,4 +1,9 @@
 #pragma once
+
+const int countSlotRowsPerPlayer = 3;
+const int countSlotColsPerPlayer = 3;
+
+
 class Player {
 private:
 	int totalScore = 0;
@@ -6,17 +11,6 @@ private:
 	int rows;
 	int cols;
 public:
-	Player(int mrows, int mcols): 
-		        rows(mrows), cols(mcols) {
-		diceValues = new int* [rows];
-		for (int i = 0; i < rows; i++) {
-			diceValues[i] = new int[cols];
-		}
-	}
-	~Player() {
-		for (int i = 0; i < rows; i++) {
-			delete[] diceValues[i];
-		}
-		delete[] diceValues;
-	}
+	Player(int _rows, int _cols);
+	~Player();
 };
