@@ -1,4 +1,6 @@
 #pragma once
+#include <GLFW/glfw3.h>
+
 struct MyColor {
     float red;
     float green;

@@ -4,15 +4,19 @@
 
 class Game {
 public:
-    Game() { InitPlayers(); }
-    ~Game() { DeletePlayers(); }
-    void Render();
+    Game();
+    bool IsFailedOnInit() { return (window == nullptr); }
+    void RunMainLoop();
+    ~Game();
 
 private:
+    GLFWwindow* window;
     Player* players[countPlayers];
     Field field;
+    bool doneGlfwInit = false;
 
     void InitPlayers();
     void DeletePlayers();
+    
 };
 
