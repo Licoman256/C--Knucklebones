@@ -22,11 +22,13 @@ void Field::Render(Player **players) {
 
 float Field::RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player) {
     
-    float yCur = yStart;
-    for (int i = 0; i < countSlotColsPerPlayer; i++, yCur -= (slotHeight + yOffset)) {
-        float xCur = xStart;
-        for (int j = 0; j < countSlotRowsPerPlayer; j++, xCur += (slotLen + xOffset)) {
-            //choose the color of slots
+    float xCur = xStart;
+    float yCur;
+    for (int i = 0; i < countSlotRowsPerPlayer; i++, xCur += (slotLen + xOffset)) {
+        
+        yCur = yStart;
+        for (int j = 0; j < countSlotColsPerPlayer; j++, yCur -= (slotHeight + yOffset)) {
+            //choose the color of slots        
             glColor3f(color.red, color.green, color.blue);
             //render the slot
             glRectf(xCur,              
@@ -41,13 +43,13 @@ float Field::RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& co
                 glColor3f(1.0f, 0.0f, 0.0f); // red
                 break;
             case 2:
-                glColor3f(1.0f, 0.5f, 1.0f); // orange
+                glColor3f(1.0f, 0.5f, 0.0f); // orange
                 break;
             case 3:
                 glColor3f(1.0f, 1.0f, 0.0f); // yellow
                 break;
             case 4:
-                glColor3f(0.0f, 1.0f, 1.0f); // green
+                glColor3f(0.0f, 1.0f, 0.0f); // green
                 break;
             case 5:
                 glColor3f(0.0f, 0.0f, 1.0f); // blue
