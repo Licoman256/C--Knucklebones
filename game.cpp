@@ -35,11 +35,27 @@ Game::~Game()
 
 void Game::RunMainLoop() 
 {
+#ifdef DEBUG
+	//fill all slots with random dices
+	std::random_device rd;     // Only used once to initialise (seed) engine
+	std::mt19937 rng(rd());    // Random-number engine used (Mersenne-Twister in this case)
+	std::uniform_int_distribution<int> uni(0, 6); // Guaranteed unbiased
+	
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			for (int k = 0; k < 2; k++) {
+				auto random_integer = uni(rng);
+				players[k]->AddDice(i, j, random_integer);
+			}
+		}
+	}
+#endif // DEBUG
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */
-		field.Render();
+		field.Render(players);
+		
 		//popup.Render();
 
 		/* Swap front and back buffers */
@@ -48,7 +64,7 @@ void Game::RunMainLoop()
 		/* Poll for and process events */
 		glfwPollEvents();
 		//ui.HandleCommands();
-		//game.Tick();
+		//Tick();
 	}
 
 }

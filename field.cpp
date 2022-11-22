@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include "game.h"
 
-void Field::Render() {
+void Field::Render(Player **players) {
     //window background
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -14,25 +14,57 @@ void Field::Render() {
     float yStart = ySlotOrigin;
     for (int i = 0; i < countPlayers; i++) {
         //shift start position to y of last slot of prev player
-        yStart = renderPlayerDiceSlots(xSlotOrigin, yStart, colors::diceSlot[i]);
+        yStart = RenderPlayerDiceSlots(xSlotOrigin, yStart, colors::diceSlot[i], *players[i]);
         //add additional spacing between players
         yStart -= yOffset;
     }  
 }
 
-float Field::renderPlayerDiceSlots(float xStart, float yStart, const MyColor& color) {
-    //choose the color of slots
-    glColor3f(color.red, color.green, color.blue);
-
+float Field::RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player) {
+    
     float yCur = yStart;
     for (int i = 0; i < countSlotColsPerPlayer; i++, yCur -= (slotHeight + yOffset)) {
         float xCur = xStart;
         for (int j = 0; j < countSlotRowsPerPlayer; j++, xCur += (slotLen + xOffset)) {
+            //choose the color of slots
+            glColor3f(color.red, color.green, color.blue);
             //render the slot
             glRectf(xCur,              
                     yCur,              
                     xCur + slotLen,    
                     yCur - slotHeight);
+            // switch color according to dice value
+            switch (player.diceValues[i][j]) {
+            case 0:
+                break;
+            case 1:
+                glColor3f(1.0f, 0.0f, 0.0f); // red
+                break;
+            case 2:
+                glColor3f(1.0f, 0.5f, 1.0f); // orange
+                break;
+            case 3:
+                glColor3f(1.0f, 1.0f, 0.0f); // yellow
+                break;
+            case 4:
+                glColor3f(0.0f, 1.0f, 1.0f); // green
+                break;
+            case 5:
+                glColor3f(0.0f, 0.0f, 1.0f); // blue
+                break;
+            case 6:
+                glColor3f(0.65f, 0.0f, 1.0f); // purple
+                break;
+            default:
+                break;
+            }
+            
+            // render dice
+            glRectf(xCur + 0.1f,
+                    yCur - 0.1f,
+                    xCur + slotLen - 0.1f,
+                    yCur - slotHeight + 0.1f);
+            
         }
     }
     //return last y coordinate so next player's slots can render there

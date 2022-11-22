@@ -5,13 +5,13 @@ static const int countPlayers = 2;
 
 class Field {
 public:
-    void Render();
+    void Render(Player** players);
 
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
 
 private:
-    float renderPlayerDiceSlots(float xStart, float yStart, const MyColor& color);
+    float RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player);
 
     const float xFieldOrigin{ -0.6f };
     const float yFieldOrigin{ 1.0f };

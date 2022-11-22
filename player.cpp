@@ -8,6 +8,12 @@ Player::Player(int _rows, int _cols)
 	for (int i = 0; i < rows; i++) {
 		diceValues[i] = new int[cols];
 	}
+	//fill with 0
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			diceValues[i][j] = 0;
+		}
+	}
 }
 
 Player::~Player()
@@ -16,5 +22,9 @@ Player::~Player()
 		delete[] diceValues[i];
 	}
 	delete[] diceValues;
+}
+
+void Player::AddDice(int row, int col, int value) {
+	diceValues[row][col] = value;
 }
 
