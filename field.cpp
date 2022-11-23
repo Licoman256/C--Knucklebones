@@ -61,58 +61,53 @@ void Field::RenderCommon() {
 
 void Field::Render(Player* player) {
     Layout lay = GetLayout(player);
-    RenderPlayerDiceSlots(xSlotOrigin, lay.yOrigin, lay.color, *player);
-}
 
-float Field::RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player) {
-    
-    float xCur = xStart;
-    float yCur;
+    float xCur = xSlotOrigin;
     for (int i = 0; i < countSlotColsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
-        yCur = yStart;
+        float yCur = lay.yOrigin;
         for (int j = 0; j < countSlotRowsPerPlayer; j++, yCur -= (slotHeight + yOffset)) {
-            //choose the color of slots        
-            glColor3f(color.red, color.green, color.blue);
-            //render the slot
-            glRectf(xCur,              
-                    yCur,              
-                    xCur + slotLen,    
-                    yCur - slotHeight);
-            // switch color according to dice value
-            switch (player.diceValues[i][j]) {
-            case 0:
-                break;
-            case 1:
-                glColor3f(1.0f, 0.0f, 0.0f); // red
-                break;
-            case 2:
-                glColor3f(1.0f, 0.5f, 0.0f); // orange
-                break;
-            case 3:
-                glColor3f(1.0f, 1.0f, 0.0f); // yellow
-                break;
-            case 4:
-                glColor3f(0.0f, 1.0f, 0.0f); // green
-                break;
-            case 5:
-                glColor3f(0.0f, 0.0f, 1.0f); // blue
-                break;
-            case 6:
-                glColor3f(0.65f, 0.0f, 1.0f); // purple
-                break;
-            default:
-                break;
-            }
-            
-            // render dice
-            glRectf(xCur + 0.1f,
-                    yCur - 0.1f,
-                    xCur + slotLen - 0.1f,
-                    yCur - slotHeight + 0.1f);
-            
+            // render the slot
+            glColor3f(lay.color.red, lay.color.green, lay.color.blue);
+            glRectf(xCur,               yCur,              
+                    xCur + slotLen,     yCur - slotHeight);
+
+            // render dice over the slot
+            RenderDice(player, i, j, xCur, yCur);
         }
     }
-    //return last y coordinate so next player's slots can render there
-    return yCur;
+
+}
+
+void Field::RenderDice(Player* player, int i, int j, float xCur, float yCur) {
+    // switch color according to dice value
+    switch (player->diceValues[i][j]) {
+    case 0:
+        break;
+    case 1:
+        glColor3f(1.0f, 0.0f, 0.0f); // red
+        break;
+    case 2:
+        glColor3f(1.0f, 0.5f, 0.0f); // orange
+        break;
+    case 3:
+        glColor3f(1.0f, 1.0f, 0.0f); // yellow
+        break;
+    case 4:
+        glColor3f(0.0f, 1.0f, 0.0f); // green
+        break;
+    case 5:
+        glColor3f(0.0f, 0.0f, 1.0f); // blue
+        break;
+    case 6:
+        glColor3f(0.65f, 0.0f, 1.0f); // purple
+        break;
+    default:
+        break;
+    }
+
+    glRectf(xCur + 0.1f,
+            yCur - 0.1f,
+            xCur + slotLen - 0.1f,
+            yCur - slotHeight + 0.1f);
 }

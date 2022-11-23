@@ -15,7 +15,6 @@ public:
     static const int WINDOW_HEIGHT = 800;
 
 private:
-    float RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player);
 
     const float xFieldOrigin{ -0.6f };
     const float yFieldOrigin{ 1.0f };
@@ -44,5 +43,5 @@ private:
 
     void ClearLayout();
     Layout GetLayout(Player* p);
-
+    void RenderDice(Player* player, int i, int j, float xCur, float yCur);
 };
