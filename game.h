@@ -20,5 +20,6 @@ private:
     void InitPlayers();
     void DeletePlayers();
     
+    void FillRandomSlots();
 };
 
