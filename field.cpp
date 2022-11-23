@@ -1,7 +1,54 @@
 #include <GLFW/glfw3.h>
 #include "game.h"
 
-void Field::Render(Player **players) {
+Field::Field() {
+    ClearLayout();
+}
+Field::~Field() {
+    // may call ClearLayout();
+}
+
+void Field::ClearLayout()
+{
+    for (auto layout : mapLayouts) {
+        layout.key = nullptr;
+        layout.yOrigin = 0.f;
+    }
+}
+
+Field::Layout Field::GetLayout(Player* p) {
+    for (const auto layout : mapLayouts) {
+        if (layout.key == p) {
+            return layout;
+        }
+    }
+    return Layout();
+}
+
+void Field::AddToLayout(int idx, Player* player) {
+    // safety
+    if (idx < 0 || countPlayers <= idx) {
+        return;
+    }
+
+    // place
+    mapLayouts[idx].key = player;
+    mapLayouts[idx].color = colors::diceSlot[idx];
+
+    // actual calc
+    switch(idx) {
+        case 0:
+            mapLayouts[idx].yOrigin = ySlotOrigin;
+            break;
+        default:
+            mapLayouts[idx].yOrigin = 
+                mapLayouts[idx-1].yOrigin 
+                - (slotHeight + yOffset) * countSlotRowsPerPlayer
+                - yOffset;
+    }
+}
+
+void Field::RenderCommon() {
     //window background
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -10,24 +57,21 @@ void Field::Render(Player **players) {
     glColor3f(colors::fieldBackground.red, colors::fieldBackground.green, colors::fieldBackground.blue);
     glRectf(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight);
 
-    //slots
-    float yStart = ySlotOrigin;
-    for (int i = 0; i < countPlayers; i++) {
-        //shift start position to y of last slot of prev player
-        yStart = RenderPlayerDiceSlots(xSlotOrigin, yStart, colors::diceSlot[i], *players[i]);
-        //add additional spacing between players
-        yStart -= yOffset;
-    }  
+}
+
+void Field::Render(Player* player) {
+    Layout lay = GetLayout(player);
+    RenderPlayerDiceSlots(xSlotOrigin, lay.yOrigin, lay.color, *player);
 }
 
 float Field::RenderPlayerDiceSlots(float xStart, float yStart, const MyColor& color, Player& player) {
     
     float xCur = xStart;
     float yCur;
-    for (int i = 0; i < countSlotRowsPerPlayer; i++, xCur += (slotLen + xOffset)) {
+    for (int i = 0; i < countSlotColsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
         yCur = yStart;
-        for (int j = 0; j < countSlotColsPerPlayer; j++, yCur -= (slotHeight + yOffset)) {
+        for (int j = 0; j < countSlotRowsPerPlayer; j++, yCur -= (slotHeight + yOffset)) {
             //choose the color of slots        
             glColor3f(color.red, color.green, color.blue);
             //render the slot

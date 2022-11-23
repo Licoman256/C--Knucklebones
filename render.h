@@ -5,7 +5,7 @@ struct MyColor {
     float red;
     float green;
     float blue;
-    MyColor(float mred, float mgreen, float mblue): 
+    MyColor(float mred = 0, float mgreen = 0, float mblue = 0): 
                   red(mred / 256.0f),
                   green(mgreen / 256.0f),
                   blue(mblue / 256.0f) {}

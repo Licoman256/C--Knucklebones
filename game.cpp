@@ -60,7 +60,10 @@ void Game::RunMainLoop() {
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */
-		field.Render(players);
+		field.RenderCommon();
+		for (auto player : players) {
+			field.Render(player);
+		}
 		
 		//popup.Render();
 
@@ -78,6 +81,7 @@ void Game::RunMainLoop() {
 void Game::InitPlayers() {
 	for (int i = 0; i < countPlayers; i++) {
 		players[i] = new Player(countSlotRowsPerPlayer, countSlotColsPerPlayer);
+		field.AddToLayout(i, players[i]);
 	}
 }
 

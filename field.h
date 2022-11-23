@@ -5,7 +5,11 @@ static const int countPlayers = 2;
 
 class Field {
 public:
-    void Render(Player** players);
+    Field();
+    ~Field();
+    void AddToLayout(int idx, Player* player);
+    void RenderCommon();
+    void Render(Player* player);
 
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
@@ -30,4 +34,15 @@ private:
     const float ySlotOrigin{ yFieldOrigin - yOffset };
     const float slotLen{ xOffset / xSlotOffsetCoeff };
     const float slotHeight{ yOffset / ySlotOffsetCoeff };
+
+    struct Layout {
+        void*   key;
+        float   yOrigin;
+        MyColor color;
+        Layout() : key(nullptr), yOrigin(0) {}
+    } mapLayouts[countPlayers];
+
+    void ClearLayout();
+    Layout GetLayout(Player* p);
+
 };
