@@ -30,17 +30,11 @@ Game::Game()
 
 void Game::FillRandomSlots()
 {
-#ifdef DEBUG
-	// fill all slots with random dices
-	std::random_device rd;     // Only used once to initialise (seed) engine
-	std::mt19937 rng(rd());    // Random-number engine used (Mersenne-Twister in this case)
-	std::uniform_int_distribution<int> uni(0, 6); // Guaranteed unbiased
-
+#ifdef DEBUG	
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			for (int k = 0; k < 2; k++) {
-				auto random_integer = uni(rng);
-				players[k]->AddDice(i, j, random_integer);
+				players[k]->AddDice(i, j);
 			}
 		}
 	}
@@ -93,5 +87,3 @@ void Game::DeletePlayers() {
 		}
 	}
 }
-
-

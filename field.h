@@ -11,7 +11,7 @@ public:
     void AddToLayout(int idx, Player* player);
     void RenderCommon();
     void Render(Player* player);
-
+  
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
 
@@ -44,5 +44,5 @@ private:
 
     void ClearLayout();
     Layout GetLayout(Player* p);
-    void RenderDice(Player* player, int i, int j, float xCur, float yCur);
+    void Render(Dice& dice, float xCur, float yCur);
 };

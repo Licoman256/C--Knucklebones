@@ -72,15 +72,15 @@ void Field::Render(Player* player) {
                     xCur + slotLen,     yCur - slotHeight);
 
             // render dice over the slot
-            RenderDice(player, i, j, xCur, yCur);
+            Render(player->dices[i][j], xCur, yCur);
         }
     }
 
 }
 
-void Field::RenderDice(Player* player, int i, int j, float xCur, float yCur) {
+void Field::Render(Dice& dice, float xCur, float yCur) {
     // switch color according to dice value
-    switch (player->diceValues[i][j]) {
+    switch (dice.GetValue()) {
     case 0:
         return;
     case 1:
