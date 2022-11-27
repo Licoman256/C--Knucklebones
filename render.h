@@ -12,9 +12,9 @@ struct MyColor {
 };
 
 namespace colors {
-    //gray
+    // gray
     const MyColor windowBackground{96, 98, 99};                                     
-    //dark blue
+    // dark blue
     const MyColor fieldBackground {12, 22, 29 };
     
     const MyColor diceSlot[] =  { {177, 99, 101}, // red

@@ -10,7 +10,7 @@ Player::Player(int _rows, int _cols)
 	}
 	totalScores = new int[cols + 1];
 
-	//fill with 0
+	// fill with 0
 	for (int i = 0; i < rows; i++) {
 		totalScores[i] = 0;
 		for (int j = 0; j < cols; j++) {

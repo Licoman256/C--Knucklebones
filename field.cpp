@@ -35,7 +35,7 @@ void Field::AddToLayout(int idx, Player* player) {
     mapLayouts[idx].key = player;
     mapLayouts[idx].color = colors::diceSlot[idx];
 
-    // actual calc
+    // origin calc
     switch(idx) {
         case 0:
             mapLayouts[idx].yOrigin = ySlotOrigin;
@@ -49,14 +49,13 @@ void Field::AddToLayout(int idx, Player* player) {
 }
 
 void Field::RenderCommon() {
-    //window background
+    // window background
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //field background
+    // field background
     glColor3f(colors::fieldBackground.red, colors::fieldBackground.green, colors::fieldBackground.blue);
     glRectf(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight);
-
 }
 
 void Field::Render(Player* player) {
@@ -83,7 +82,7 @@ void Field::RenderDice(Player* player, int i, int j, float xCur, float yCur) {
     // switch color according to dice value
     switch (player->diceValues[i][j]) {
     case 0:
-        break;
+        return;
     case 1:
         glColor3f(1.0f, 0.0f, 0.0f); // red
         break;

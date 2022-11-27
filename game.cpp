@@ -20,7 +20,7 @@ Game::Game()
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	//tell opengl where to render
+	// tell opengl where to render
 	glViewport(0, 0, Field::WINDOW_WIDTH, Field::WINDOW_HEIGHT);
 
 	// debug
@@ -31,7 +31,7 @@ Game::Game()
 void Game::FillRandomSlots()
 {
 #ifdef DEBUG
-	//fill all slots with random dices
+	// fill all slots with random dices
 	std::random_device rd;     // Only used once to initialise (seed) engine
 	std::mt19937 rng(rd());    // Random-number engine used (Mersenne-Twister in this case)
 	std::uniform_int_distribution<int> uni(0, 6); // Guaranteed unbiased
@@ -65,15 +65,15 @@ void Game::RunMainLoop() {
 			field.Render(player);
 		}
 		
-		//popup.Render();
+		// popup.Render();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
 		glfwPollEvents();
-		//ui.HandleCommands();
-		//Tick();
+		// ui.HandleCommands();
+		// Tick();
 	}
 
 }
