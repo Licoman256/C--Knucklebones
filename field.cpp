@@ -43,7 +43,7 @@ void Field::AddToLayout(int idx, Player* player) {
         default:
             mapLayouts[idx].yOrigin = 
                 mapLayouts[idx-1].yOrigin 
-                - (slotHeight + yOffset) * countSlotRowsPerPlayer
+                - (slotHeight + yOffset) * countRowsPerGroup
                 - yOffset;
     }
 }
@@ -62,10 +62,10 @@ void Field::Render(Player* player) {
     Layout lay = GetLayout(player);
 
     float xCur = xSlotOrigin;
-    for (int i = 0; i < countSlotColsPerPlayer; i++, xCur += (slotLen + xOffset)) {
+    for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
         float yCur = lay.yOrigin;
-        for (int j = 0; j < countSlotRowsPerPlayer; j++, yCur -= (slotHeight + yOffset)) {
+        for (int j = 0; j < countRowsPerGroup; j++, yCur -= (slotHeight + yOffset)) {
             // render the slot
             glColor3f(lay.color.red, lay.color.green, lay.color.blue);
             glRectf(xCur,               yCur,              

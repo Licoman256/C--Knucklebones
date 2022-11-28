@@ -27,8 +27,8 @@ private:
     constexpr float CalcOffset(const float f, const float coeff, const int count) {
         return f * coeff / ((coeff + 1) * count + coeff);
     }
-    const float xOffset{ CalcOffset(fieldLen,    xSlotOffsetCoeff, countSlotRowsPerPlayer) };
-    const float yOffset{ CalcOffset(fieldHeight, ySlotOffsetCoeff, countSlotColsPerPlayer) / countPlayers };
+    const float xOffset{ CalcOffset(fieldLen,    xSlotOffsetCoeff, countGroupsPerPlayer) };
+    const float yOffset{ CalcOffset(fieldHeight, ySlotOffsetCoeff, countRowsPerGroup) / countPlayers };
 
     const float xSlotOrigin{ xFieldOrigin + xOffset };
     const float ySlotOrigin{ yFieldOrigin - yOffset };

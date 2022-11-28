@@ -74,7 +74,7 @@ void Game::RunMainLoop() {
 
 void Game::InitPlayers() {
 	for (int i = 0; i < countPlayers; i++) {
-		players[i] = new Player(countSlotRowsPerPlayer, countSlotColsPerPlayer);
+		players[i] = new Player(countRowsPerGroup, countGroupsPerPlayer);
 		field.AddToLayout(i, players[i]);
 	}
 }

@@ -6,11 +6,20 @@ Player::Player(int _rows, int _cols)
 	, cols(_cols)
 	, totalScore(0)
 {
+	// TO DEL
+	rows = 4;
+	cols = 4;
+
+	// ok
 	dices = new Dice* [rows];
 	for (int i = 0; i < rows; i++) {
 		dices[i] = new Dice[cols];
 	}
 	colScores = new int[cols];
+
+	// TO DEL
+	rows = _rows;
+	cols = _cols;
 }
 
 Player::~Player()
