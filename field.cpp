@@ -16,7 +16,7 @@ void Field::ClearLayout()
     }
 }
 
-Field::Layout Field::GetLayout(Player* p) {
+Field::Layout Field::GetLayout(const void* p) {
     for (const auto layout : mapLayouts) {
         if (layout.key == p) {
             return layout;
@@ -25,14 +25,14 @@ Field::Layout Field::GetLayout(Player* p) {
     return Layout();
 }
 
-void Field::AddToLayout(int idx, Player* player) {
+void Field::AddToLayout(int idx, const Player& player) {
     // safety
     if (idx < 0 || countPlayers <= idx) {
         return;
     }
 
     // place
-    mapLayouts[idx].key = player;
+    mapLayouts[idx].key = &player;
     mapLayouts[idx].color = colors::diceSlot[idx];
 
     // origin calc
@@ -58,8 +58,8 @@ void Field::RenderCommon() {
     glRectf(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight);
 }
 
-void Field::Render(Player* player) {
-    Layout lay = GetLayout(player);
+void Field::Render(const Player& player) {
+    Layout lay = GetLayout(&player);
 
     float xCur = xSlotOrigin;
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
@@ -72,13 +72,13 @@ void Field::Render(Player* player) {
                     xCur + slotLen,     yCur - slotHeight);
 
             // render dice over the slot
-            Render(player->dices[i][j], xCur, yCur);
+            Render(player.groups[i].dices[j], xCur, yCur);
         }
     }
 
 }
 
-void Field::Render(Dice& dice, float xCur, float yCur) {
+void Field::Render(const Dice &dice, float xCur, float yCur) {
     // switch color according to dice value
     switch (dice.GetValue()) {
     case 0:

@@ -8,9 +8,9 @@ class Field {
 public:
     Field();
     ~Field();
-    void AddToLayout(int idx, Player* player);
+    void AddToLayout(int idx, const Player &player);
     void RenderCommon();
-    void Render(Player* player);
+    void Render(const Player& player);
   
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
@@ -36,13 +36,13 @@ private:
     const float slotHeight{ yOffset / ySlotOffsetCoeff };
 
     struct Layout {
-        void*   key;
+        const void* key;
         float   yOrigin;
         MyColor color;
         Layout() : key(nullptr), yOrigin(0) {}
     } mapLayouts[countPlayers];
 
     void ClearLayout();
-    Layout GetLayout(Player* p);
-    void Render(Dice& dice, float xCur, float yCur);
+    Layout GetLayout(const void* key);
+    void Render(const Dice& dice, float xCur, float yCur);
 };

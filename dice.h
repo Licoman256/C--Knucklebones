@@ -4,7 +4,7 @@ public:
 	Dice();
 	void Throw();
 	void MoveToField();
-	int GetValue();
+	int GetValue() const;
 	~Dice();	
 
 private:

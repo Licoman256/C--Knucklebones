@@ -2,10 +2,8 @@
 
 Game::Game()
 	: window(nullptr)
+	, players(countPlayers)
 { 
-	// players
-	InitPlayers();
-
 	/* Initialize the library */
 	if (!glfwInit())
 		return;
@@ -20,8 +18,13 @@ Game::Game()
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	// tell opengl where to render
+	// tell OpenGL where to render
 	glViewport(0, 0, Field::WINDOW_WIDTH, Field::WINDOW_HEIGHT);
+
+	// calc graphic sizes
+	for (int i = 0; i < countPlayers; i++) {
+		field.AddToLayout(i, players[i]);
+	}
 
 	// debug
 	FillRandomSlots();
@@ -31,12 +34,8 @@ Game::Game()
 void Game::FillRandomSlots()
 {
 #ifdef DEBUG	
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			for (int k = 0; k < 2; k++) {
-				players[k]->AddDice(i, j);
-			}
-		}
+	for (auto& player : players) {
+		player.FillRandomSlots();
 	}
 #endif // DEBUG
 }
@@ -47,7 +46,6 @@ Game::~Game()
 		glfwTerminate();
 	}
 
-	DeletePlayers(); 
 }
 
 void Game::RunMainLoop() {
@@ -55,7 +53,7 @@ void Game::RunMainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */
 		field.RenderCommon();
-		for (auto player : players) {
+		for (const auto &player : players) {
 			field.Render(player);
 		}
 		
@@ -70,20 +68,4 @@ void Game::RunMainLoop() {
 		// Tick();
 	}
 
-}
-
-void Game::InitPlayers() {
-	for (int i = 0; i < countPlayers; i++) {
-		players[i] = new Player(countRowsPerGroup, countGroupsPerPlayer);
-		field.AddToLayout(i, players[i]);
-	}
-}
-
-void Game::DeletePlayers() {
-	for (int i = 0; i < countPlayers; i++) {
-		if (players[i]) {
-			delete players[i];
-			players[i] = nullptr;
-		}
-	}
 }

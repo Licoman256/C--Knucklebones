@@ -9,7 +9,7 @@ void Dice::Throw() {
 	value = random::uni(random::rng);
 }
 
-int Dice::GetValue() {
+int Dice::GetValue() const {
 	return value;
 }
 

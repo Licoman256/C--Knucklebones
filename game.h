@@ -12,13 +12,10 @@ public:
 
 private:
     GLFWwindow* window;
-    Player* players[countPlayers];
+    std::vector<Player> players;
     Field field;
     bool doneGlfwInit = false;
-
-    void InitPlayers();
-    void DeletePlayers();
-    
+  
     void FillRandomSlots();
 };
 

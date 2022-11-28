@@ -1,50 +1,51 @@
 #include "game.h"
 #include "dice.h"
+Group::Group(int _rows = countRowsPerGroup)
+	: dices(_rows)
+{}
+Group::~Group()
+{}
 
-Player::Player(int _rows, int _cols)
-	: rows(_rows)
-	, cols(_cols)
-	, totalScore(0)
+Player::Player()
+	: totalScore(0)
 {
-	// TO DEL
-	rows = 4;
-	cols = 4;
-
-	// ok
-	dices = new Dice* [rows];
-	for (int i = 0; i < rows; i++) {
-		dices[i] = new Dice[cols];
+	groups.reserve(countGroupsPerPlayer);
+	Group dummy(countRowsPerGroup);
+	for (int i = 0; i < countGroupsPerPlayer; i++) {
+		groups.push_back(dummy);
 	}
-	colScores = new int[cols];
-
-	// TO DEL
-	rows = _rows;
-	cols = _cols;
 }
 
 Player::~Player()
-{
-	for (int i = 0; i < rows; i++) {
-		delete[] dices[i];
+{}
+
+void Player::RecalcTotal() {
+	totalScore = 0;
+	for (const auto &grp : groups) {
+		totalScore += grp.GetScore();
 	}
-	delete[] dices;
 }
 
-void Player::AddDice(int row, int col) {
-	dices[row][col].Throw();
-	dices[row][col].MoveToField();
+void Player::FillRandomSlots() {
+	for (auto& grp : groups) {
+		grp.FillRandomSlots();
+	}
 	RecalcTotal();
 }
 
-void Player::RecalcTotal() {
-	int totalSum = 0;
-	for (int i = 0; i < cols; i++) {
-		int colSum = 0;
-		for (int j = 0; j < rows; j++) {
-			colSum += dices[i][j].GetValue();
-		}
-		colScores[i] = colSum;
-		totalSum += colSum;
+void Group::FillRandomSlots() {
+	for (auto& dice : dices) {
+		dice.Throw();
+		dice.MoveToField();
 	}
-	totalScore = totalSum;
 }
+
+int Group::GetScore() const { 
+	int total = 0; 
+	for (auto& dice : dices) {
+		total += dice.GetValue();
+	}
+	return total;
+}
+
+
