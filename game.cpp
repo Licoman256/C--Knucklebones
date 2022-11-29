@@ -76,6 +76,9 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 	if (action == GLFW_PRESS) {
 		pressedKey = key;
 	}
+	if (key == GLFW_KEY_E || key == GLFW_KEY_ESCAPE) {
+		 glfwSetWindowShouldClose(window, 1);
+	}
 }
 
 void Game::Turn() {
