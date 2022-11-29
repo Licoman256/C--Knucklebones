@@ -7,10 +7,13 @@ const int countRowsPerGroup = 3;
 class Group {
 public:
 	Group(int _rows);
-	std::vector<Dice> dices;
-	~Group();
-	int GetScore() const;
 	void FillRandomSlots();
+	void Add(Dice& toplace);
+	int GetScore() const;
+	
+	~Group();
+	
+	std::vector<Dice> dices;
 };
 
 class Player {
@@ -20,8 +23,9 @@ public:
 	std::vector<Group> groups;
 
 	Player();
-	void RecalcTotal();
 	void FillRandomSlots();
+	void Add(Dice& toplace, Group &gr);
+	void RecalcTotal();
 
 	~Player();
 };

@@ -34,9 +34,24 @@ void Player::FillRandomSlots() {
 }
 
 void Group::FillRandomSlots() {
-	for (auto& dice : dices) {
+	for (int i = 0; i < dices.size(); i++) {
+		Dice dice;
 		dice.Throw();
-		dice.MoveToField();
+		Add(dice);
+	}
+}
+
+void Player::Add(Dice& toplace, Group &gr) {
+	gr.Add(toplace);
+}
+
+void Group::Add(Dice& toplace) {
+	for (int i = dices.size() - 1; i >= 0; i--) {
+		if (!dices[i].GetValue()) {
+			toplace.MoveToField();
+			dices[i] = toplace;
+			return;
+		}
 	}
 }
 
@@ -47,5 +62,3 @@ int Group::GetScore() const {
 	}
 	return total;
 }
-
-
