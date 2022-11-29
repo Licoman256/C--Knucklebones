@@ -12,7 +12,7 @@ void Field::ClearLayout()
 {
     for (auto layout : mapLayouts) {
         layout.key = nullptr;
-        layout.yOrigin = 0.f;
+        layout.ySlotOrigin = 0.f;
     }
 }
 
@@ -38,16 +38,18 @@ void Field::AddToLayout(int idx, const Player& player) {
     // origin calc
     switch(idx) {
         case 0:
-            mapLayouts[idx].yOrigin = ySlotOrigin;
+            mapLayouts[idx].ySlotOrigin = ySlotOrigin;
             break;
         default:
-            mapLayouts[idx].yOrigin = 
-                mapLayouts[idx-1].yOrigin 
+            mapLayouts[idx].ySlotOrigin = 
+                mapLayouts[idx-1].ySlotOrigin 
                 - (slotHeight + yOffset) * countRowsPerGroup
                 - yOffset;
     }
+
+    // left box depends on slot
     mapLayouts[idx].yBoxOrigin =
-        mapLayouts[idx].yOrigin
+        mapLayouts[idx].ySlotOrigin
         - (slotHeight + yOffset) * (countRowsPerGroup - 1) / 2;
 }
 
@@ -72,12 +74,13 @@ void Field::Render(const Player& player) {
     float xCur = xSlotOrigin;
     RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
 
-    if (player.isCur) {
+    if (player.isActive) {
         Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
     }
+
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
-        float yCur = lay.yOrigin;
+        float yCur = lay.ySlotOrigin;
         for (int j = 0; j < countRowsPerGroup; j++, yCur -= (slotHeight + yOffset)) {
             RenderSlot(lay.color, xCur, yCur);
 

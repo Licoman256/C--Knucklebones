@@ -17,18 +17,18 @@ public:
 };
 
 class Player {
-private:
-	int totalScore;
 public:
 	std::vector<Group> groups;
 	Dice boxDice;
-	bool isCur;
+	bool isActive;
 	Player();
 	void FillRandomSlots();
 	void StartTurn();
 	bool EndTurn(int grIdx);
-	bool Add(Dice &toplace, Group &gr);
 	void RecalcTotal();
 
 	~Player();
+private:
+	int totalScore;
+	bool Add(Dice& toplace, Group& gr);
 };

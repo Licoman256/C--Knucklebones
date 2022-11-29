@@ -54,13 +54,10 @@ void Game::RunMainLoop() {
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		/* Render here */
-		Turn();
-		pressedKey = ' ';
 		field.RenderCommon();
 		for (const auto &player : players) {
 			field.Render(player);
 		}
-		
 		// popup.Render();
 
 		/* Swap front and back buffers */
@@ -69,7 +66,7 @@ void Game::RunMainLoop() {
 		/* Poll for and process events */
 		glfwPollEvents();
 		// ui.HandleCommands();
-		// Tick();
+		Turn();
 	}
 }
 
@@ -88,12 +85,13 @@ void Game::Turn() {
 	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
 		int grIdx = pressedKey - '0';
 		if (players[curPlayerIdx].EndTurn(grIdx)) {
+			// loop around
 			curPlayerIdx++;
-			// loop back
-			if (curPlayerIdx >= countPlayers) {
-				curPlayerIdx = 0;
-			}
+			curPlayerIdx %= countPlayers;
+
 			players[curPlayerIdx].StartTurn();
 		}
 	}
+
+	pressedKey = ' ';
 }

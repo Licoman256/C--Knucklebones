@@ -40,10 +40,10 @@ private:
 
     struct Layout {
         const void* key;
-        float   yOrigin;
+        float   ySlotOrigin;
         float   yBoxOrigin;
         MyColor color;
-        Layout() : key(nullptr), yOrigin(0) {}
+        Layout() : key(nullptr), ySlotOrigin(0) {}
     } mapLayouts[countPlayers];
 
     void ClearLayout();

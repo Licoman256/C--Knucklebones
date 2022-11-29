@@ -8,7 +8,7 @@ Group::~Group()
 
 Player::Player()
 	: totalScore(0)
-	, isCur(false)
+	, isActive(false)
 {
 	groups.reserve(countGroupsPerPlayer);
 	Group dummy(countRowsPerGroup);
@@ -37,16 +37,14 @@ void Group::FillRandomSlots() {
 }
 
 void Player::StartTurn() {
-	Dice dummy;
-	dummy.Throw();
-	boxDice = dummy;
-	isCur = true;
+	boxDice.Throw();
+	isActive = true;
 }
 
 bool Player::EndTurn(int grIdx) {
 	bool added = Add(boxDice, groups[grIdx]);
 	if (added) {
-		isCur = false;
+		isActive = false;
 	}
 	return added;
 }
@@ -56,7 +54,7 @@ bool Player::Add(Dice &toplace, Group &gr) {
 }
 
 bool Group::Add(Dice &toplace) {
-	for (int i = dices.size() - 1; i >= 0; i--) {
+	for (int i = static_cast<int>(dices.size()); --i >= 0;) {
 		if (!dices[i].GetValue()) {
 			toplace.MoveToField();
 			dices[i] = toplace;
