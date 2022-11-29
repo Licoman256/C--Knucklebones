@@ -8,6 +8,7 @@ Group::~Group()
 
 Player::Player()
 	: totalScore(0)
+	, isCur(false)
 {
 	groups.reserve(countGroupsPerPlayer);
 	Group dummy(countRowsPerGroup);
@@ -39,10 +40,15 @@ void Player::StartTurn() {
 	Dice dummy;
 	dummy.Throw();
 	boxDice = dummy;
+	isCur = true;
 }
 
 bool Player::EndTurn(int grIdx) {
-	return Add(boxDice, groups[grIdx]);
+	bool added = Add(boxDice, groups[grIdx]);
+	if (added) {
+		isCur = false;
+	}
+	return added;
 }
 
 bool Player::Add(Dice &toplace, Group &gr) {

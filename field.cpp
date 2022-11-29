@@ -46,6 +46,9 @@ void Field::AddToLayout(int idx, const Player& player) {
                 - (slotHeight + yOffset) * countRowsPerGroup
                 - yOffset;
     }
+    mapLayouts[idx].yBoxOrigin =
+        mapLayouts[idx].yOrigin
+        - (slotHeight + yOffset) * (countRowsPerGroup - 1) / 2;
 }
 
 void Field::RenderCommon() {
@@ -58,24 +61,30 @@ void Field::RenderCommon() {
     glRectf(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight);
 }
 
+void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
+    glColor3f(color.red, color.green,color.blue);
+    glRectf(xCur, yCur,
+            xCur + slotLen, yCur - slotHeight);
+}
+
 void Field::Render(const Player& player) {
     Layout lay = GetLayout(&player);
-
     float xCur = xSlotOrigin;
+    RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
+
+    if (player.isCur) {
+        Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
+    }
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
         float yCur = lay.yOrigin;
         for (int j = 0; j < countRowsPerGroup; j++, yCur -= (slotHeight + yOffset)) {
-            // render the slot
-            glColor3f(lay.color.red, lay.color.green, lay.color.blue);
-            glRectf(xCur,               yCur,              
-                    xCur + slotLen,     yCur - slotHeight);
+            RenderSlot(lay.color, xCur, yCur);
 
             // render dice over the slot
             Render(player.groups[i].dices[j], xCur, yCur);
         }
     }
-    //Render(player.boxDice,)
 }
 
 void Field::Render(const Dice &dice, float xCur, float yCur) {

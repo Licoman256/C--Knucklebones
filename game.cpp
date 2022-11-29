@@ -31,6 +31,7 @@ Game::Game()
 	FillRandomSlots();
 
 	players[0].StartTurn();
+	
 }
 
 Game::~Game() {

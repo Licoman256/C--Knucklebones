@@ -17,6 +17,7 @@ private:
     bool doneGlfwInit = false;
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static char pressedKey; // TODO add inline
+
     int curPlayerIdx = 0;
     void Turn();
     void FillRandomSlots();

@@ -22,7 +22,7 @@ private:
 public:
 	std::vector<Group> groups;
 	Dice boxDice;
-
+	bool isCur;
 	Player();
 	void FillRandomSlots();
 	void StartTurn();
