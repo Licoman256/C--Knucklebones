@@ -35,11 +35,14 @@ void Group::FillRandomSlots() {
 	}
 }
 
-bool Player::Turn(int gr) {
+void Player::StartTurn() {
 	Dice dummy;
 	dummy.Throw();
+	boxDice = dummy;
+}
 
-	return Add(dummy, groups[gr]);
+bool Player::EndTurn(int grIdx) {
+	return Add(boxDice, groups[grIdx]);
 }
 
 bool Player::Add(Dice &toplace, Group &gr) {

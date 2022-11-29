@@ -21,10 +21,12 @@ private:
 	int totalScore;
 public:
 	std::vector<Group> groups;
+	Dice boxDice;
 
 	Player();
 	void FillRandomSlots();
-	bool Turn(int gr);
+	void StartTurn();
+	bool EndTurn(int grIdx);
 	bool Add(Dice &toplace, Group &gr);
 	void RecalcTotal();
 

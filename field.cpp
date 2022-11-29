@@ -75,7 +75,7 @@ void Field::Render(const Player& player) {
             Render(player.groups[i].dices[j], xCur, yCur);
         }
     }
-
+    //Render(player.boxDice,)
 }
 
 void Field::Render(const Dice &dice, float xCur, float yCur) {

@@ -30,6 +30,7 @@ Game::Game()
 	// debug
 	FillRandomSlots();
 
+	players[0].StartTurn();
 }
 
 Game::~Game() {
@@ -82,13 +83,16 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 void Game::Turn() {
-	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
-		if (lastPlayerMoved >= countPlayers) {
-			lastPlayerMoved = 0;
-		}
 
-		if (players[lastPlayerMoved].Turn(pressedKey - '0')) {
-			lastPlayerMoved++;
+	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
+		int grIdx = pressedKey - '0';
+		if (players[curPlayerIdx].EndTurn(grIdx)) {
+			curPlayerIdx++;
+			// loop back
+			if (curPlayerIdx >= countPlayers) {
+				curPlayerIdx = 0;
+			}
+			players[curPlayerIdx].StartTurn();
 		}
 	}
 }
