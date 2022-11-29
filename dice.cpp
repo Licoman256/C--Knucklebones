@@ -7,6 +7,7 @@ Dice::Dice()
 
 void Dice::Throw() {
 	value = random::uni(random::rng);
+	// animation of dice spinning in the box
 }
 
 int Dice::GetValue() const {

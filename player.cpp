@@ -35,18 +35,26 @@ void Group::FillRandomSlots() {
 	}
 }
 
-void Player::Add(Dice &toplace, Group &gr) {
-	gr.Add(toplace);
+bool Player::Turn(int gr) {
+	Dice dummy;
+	dummy.Throw();
+
+	return Add(dummy, groups[gr]);
 }
 
-void Group::Add(Dice &toplace) {
+bool Player::Add(Dice &toplace, Group &gr) {
+	return gr.Add(toplace);
+}
+
+bool Group::Add(Dice &toplace) {
 	for (int i = dices.size() - 1; i >= 0; i--) {
 		if (!dices[i].GetValue()) {
 			toplace.MoveToField();
 			dices[i] = toplace;
-			return;
+			return true;
 		}
 	}
+	return false;
 }
 
 

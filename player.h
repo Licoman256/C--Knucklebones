@@ -1,14 +1,14 @@
 #pragma once
 #include "dice.h"
 #include <vector>
-const int countGroupsPerPlayer = 4;
+const int countGroupsPerPlayer = 3;
 const int countRowsPerGroup = 3;
 
 class Group {
 public:
 	Group(int _rows);
 	void FillRandomSlots();
-	void Add(Dice &toplace);
+	bool Add(Dice &toplace);
 	int GetScore() const;
 	
 	~Group();
@@ -24,7 +24,8 @@ public:
 
 	Player();
 	void FillRandomSlots();
-	void Add(Dice &toplace, Group &gr);
+	bool Turn(int gr);
+	bool Add(Dice &toplace, Group &gr);
 	void RecalcTotal();
 
 	~Player();

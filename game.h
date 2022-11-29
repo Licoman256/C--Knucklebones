@@ -1,5 +1,5 @@
 #pragma once
-#define DEBUG
+//#define FILLSLOTS
 #include "render.h"
 #include "field.h"
 
@@ -15,7 +15,9 @@ private:
     std::vector<Player> players;
     Field field;
     bool doneGlfwInit = false;
-  
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static char pressedKey; // TODO add inline
+    int lastPlayerMoved = 0;
+    void Turn();
     void FillRandomSlots();
 };
-
