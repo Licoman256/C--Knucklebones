@@ -19,12 +19,6 @@ Player::Player()
 Player::~Player()
 {}
 
-void Player::RecalcTotal() {
-	totalScore = 0;
-	for (const auto &grp : groups) {
-		totalScore += grp.GetScore();
-	}
-}
 
 void Player::FillRandomSlots() {
 	for (auto& grp : groups) {
@@ -35,23 +29,31 @@ void Player::FillRandomSlots() {
 
 void Group::FillRandomSlots() {
 	for (int i = 0; i < dices.size(); i++) {
-		Dice dice;
-		dice.Throw();
-		Add(dice);
+		Dice dummy;
+		dummy.Throw();
+		Add(dummy);
 	}
 }
 
-void Player::Add(Dice& toplace, Group &gr) {
+void Player::Add(Dice &toplace, Group &gr) {
 	gr.Add(toplace);
 }
 
-void Group::Add(Dice& toplace) {
+void Group::Add(Dice &toplace) {
 	for (int i = dices.size() - 1; i >= 0; i--) {
 		if (!dices[i].GetValue()) {
 			toplace.MoveToField();
 			dices[i] = toplace;
 			return;
 		}
+	}
+}
+
+
+void Player::RecalcTotal() {
+	totalScore = 0;
+	for (const auto& grp : groups) {
+		totalScore += grp.GetScore();
 	}
 }
 

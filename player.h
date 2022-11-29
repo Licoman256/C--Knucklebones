@@ -8,7 +8,7 @@ class Group {
 public:
 	Group(int _rows);
 	void FillRandomSlots();
-	void Add(Dice& toplace);
+	void Add(Dice &toplace);
 	int GetScore() const;
 	
 	~Group();
@@ -24,7 +24,7 @@ public:
 
 	Player();
 	void FillRandomSlots();
-	void Add(Dice& toplace, Group &gr);
+	void Add(Dice &toplace, Group &gr);
 	void RecalcTotal();
 
 	~Player();
