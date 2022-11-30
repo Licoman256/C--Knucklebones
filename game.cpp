@@ -15,7 +15,7 @@ Game::Game()
 	window = glfwCreateWindow(field.WINDOW_WIDTH, field.WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
 	if (!window) {
 		return;
-	}
+	} 
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
 
@@ -52,7 +52,14 @@ void Game::FillRandomSlots()
 #endif // FILLSLOTS
 }
 
+float Game::CalcDimCoeff() {
+	int height, width;
+	glfwGetWindowSize(window, &width, &height);
+	return static_cast<float>(height) / static_cast<float>(width);
+}
+
 void Game::Render() {
+	field.dimCoef = CalcDimCoeff();
 	field.RenderCommon();
 	for (const auto& player : players) {
 		field.Render(player);

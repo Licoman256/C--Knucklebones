@@ -8,6 +8,7 @@ public:
     Game();
     bool IsFailedOnInit() { return (window == nullptr); }
     void RunMainLoop();
+    float CalcDimCoeff();
     ~Game();
 
 private:
@@ -23,6 +24,7 @@ private:
     static void resize_callback(GLFWwindow* window, int width, int height);
 
     void Render();
+
     int curPlayerIdx = 0;
     void Turn();
     void FillRandomSlots();

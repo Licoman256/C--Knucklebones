@@ -14,7 +14,8 @@ public:
   
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
-
+    // Needed to compensate for dimension difference so we can use slotHeight as x coordinate and slotLen as y
+    float dimCoef;
 private:
 
     const float xFieldOrigin{ -0.6f };
@@ -50,4 +51,6 @@ private:
     Layout GetLayout(const void* key);
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
+    void ChangeColor(const Dice& dice); //TODO replace with change texture
+
 };

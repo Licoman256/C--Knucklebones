@@ -90,7 +90,7 @@ void Field::Render(const Player& player) {
     }
 }
 
-void Field::Render(const Dice &dice, float xCur, float yCur) {
+void Field::ChangeColor(const Dice& dice) {
     // switch color according to dice value
     switch (dice.GetValue()) {
     case 0:
@@ -116,10 +116,26 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
     default:
         break;
     }
-    // compensate for dimension difference. Needed so we can use slotHeight as x coordinate
-    float dimCoef = static_cast<float>(WINDOW_HEIGHT) / static_cast<float>(WINDOW_WIDTH);
-    glRectf(xCur + (slotLen - slotHeight * dimCoef) / 2,
-            yCur,
-            xCur + (slotLen + slotHeight * dimCoef) / 2,
-            yCur - slotHeight);
+}
+
+void Field::Render(const Dice &dice, float xCur, float yCur) {
+    ChangeColor(dice);
+
+    float leftDiceOffset  = (slotLen    - slotHeight * dimCoef) / 2;
+    float rightDiceOffset = (slotLen    + slotHeight * dimCoef) / 2 - slotLen;
+    float upDiceOffset    = (slotHeight - slotLen    / dimCoef) / 2;
+    float downDiceOffset  = (slotHeight + slotLen    / dimCoef) / 2 - slotHeight;
+
+    if (slotLen > slotHeight * dimCoef) {
+        upDiceOffset   = 0;
+        downDiceOffset = 0;
+
+    } else {
+        leftDiceOffset  = 0;
+        rightDiceOffset = 0;   
+    }
+    glRectf(xCur + leftDiceOffset,
+            yCur - upDiceOffset,
+            xCur + rightDiceOffset + slotLen,
+            yCur - downDiceOffset  - slotHeight);
 }
