@@ -111,14 +111,15 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
         glColor3f(0.0f, 0.0f, 1.0f); // blue
         break;
     case 6:
-        glColor3f(0.65f, 0.0f, 1.0f); // purple
+        glColor3f(0.65f, 0.0f, 1.0f); // purple  
         break;
     default:
         break;
     }
-
-    glRectf(xCur + 0.1f,
-            yCur - 0.1f,
-            xCur + slotLen - 0.1f,
-            yCur - slotHeight + 0.1f);
+    // compensate for dimension difference. Needed so we can use slotHeight as x coordinate
+    float dimCoef = static_cast<float>(WINDOW_HEIGHT) / static_cast<float>(WINDOW_WIDTH);
+    glRectf(xCur + (slotLen - slotHeight * dimCoef) / 2,
+            yCur,
+            xCur + (slotLen + slotHeight * dimCoef) / 2,
+            yCur - slotHeight);
 }
