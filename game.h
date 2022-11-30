@@ -15,9 +15,14 @@ private:
     std::vector<Player> players;
     Field field;
     bool doneGlfwInit = false;
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static char pressedKey; 
 
+    static Game* _this; // to use within static callbacks
+    char pressedKey;
+
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void resize_callback(GLFWwindow* window, int width, int height);
+
+    void Render();
     int curPlayerIdx = 0;
     void Turn();
     void FillRandomSlots();
