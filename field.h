@@ -53,10 +53,12 @@ private:
 
     void ClearLayout();
     Layout GetLayout(const void* key);
+
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
-    bool ChangeColor(const Dice& dice); //TODO replace with change texture
+
+    bool ChangeColor(const Dice& dice);
+    bool ChangeTexture(const Dice& dice);
 
     bool LoadTexture(int idxTx, char const* filename);
-
 };

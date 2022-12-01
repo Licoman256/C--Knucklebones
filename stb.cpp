@@ -11,8 +11,11 @@ void Field::PrepareTextures() {
 	glGenTextures(COUNT_TEX_NAMES, textureNames);
 
 	// load for each
-	LoadTexture(E_BACKGROUND, "data/cat.png");
-	LoadTexture(E_DICE_1,     "data/dice1.png");
+	for (int i = 0; i < TEXTURE_LAST; i++) {
+		LoadTexture(i, textFileNames[i]);
+	}
+	//LoadTexture(E_BACKGROUND, "data/cat.png");
+	//LoadTexture(E_DICE_1,     "data/dice1.png");
 
 	// clean up
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -47,23 +50,23 @@ bool Field::LoadTexture(int idxTx, char const* filename) {
 	return true;
 }
 
-// Vertex Shader source code
-const char* vertexShaderSource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-//Fragment Shader source code
-const char* fragmentShaderSource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-"}\n\0";
+//// Vertex Shader source code
+//const char* vertexShaderSource =
+//"#version 330 core\n"
+//"layout (location = 0) in vec3 aPos;\n"
+//"void main()\n"
+//"{\n"
+//"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+//"}\0";
+//
+////Fragment Shader source code
+//const char* fragmentShaderSource =
+//"#version 330 core\n"
+//"out vec4 FragColor;\n"
+//"void main()\n"
+//"{\n"
+//"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
+//"}\n\0";
 
 void Field::PrepareShaders() {
 //	unsigned int VBO;

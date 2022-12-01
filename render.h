@@ -13,9 +13,9 @@ struct MyColor {
 
 namespace colors {
     // gray
-    const MyColor windowBackground{96, 98, 99};                                     
+    const MyColor windowBackground { 96, 98, 99};                                     
     // dark blue
-    const MyColor fieldBackground {12, 22, 29 };
+    const MyColor fieldBackground { 12, 22, 29 };
     
     const MyColor diceSlot[] =  { {177, 99, 101}, // red
                                   {99, 131, 177}, // blue
@@ -35,5 +35,15 @@ enum {
     E_DICE_6,
     TEXTURE_LAST
 };
-const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;
 
+static const char const* textFileNames[] = {
+    "data/cat.png",
+    "data/dice1.png",
+    "data/dice2.png",
+    "data/dice3.png",
+    "data/dice4.png",
+    "data/dice5.png",
+    "data/dice6.png",
+};
+
+const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;

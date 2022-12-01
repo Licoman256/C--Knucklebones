@@ -64,7 +64,6 @@ bool Group::Add(Dice &toplace) {
 	return false;
 }
 
-
 void Player::RecalcTotal() {
 	totalScore = 0;
 	for (const auto& grp : groups) {

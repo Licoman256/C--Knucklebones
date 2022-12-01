@@ -65,9 +65,6 @@ void Field::RenderCommon() {
 
 void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
     glColor3f(color.red, color.green,color.blue);
-//    glRectf(xCur, yCur,
-//            xCur + slotLen, yCur - slotHeight);
-
 
     float startx = xCur;
     float starty = yCur;
@@ -77,16 +74,12 @@ void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureNames[0]);
     glBegin(GL_QUADS);
-    glTexCoord2f(0.0, 0.0);
-    glVertex2f(startx, starty);
-    glTexCoord2f(1.0, 0);
-    glVertex2f(startx + sizeX, starty);
-    glTexCoord2f(1.0, 1.0);
-    glVertex2f(startx + sizeX, starty - sizeY);
-    glTexCoord2f(0, 1.0);
-    glVertex2f(startx, starty - sizeY);
+        glTexCoord2f(0.0, 0.0); glVertex2f(startx, starty);
+        glTexCoord2f(1.0, 0.0); glVertex2f(startx + sizeX, starty);
+        glTexCoord2f(1.0, 1.0); glVertex2f(startx + sizeX, starty - sizeY);
+        glTexCoord2f(0.0, 1.0); glVertex2f(startx, starty - sizeY);
     glEnd();
-
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Field::Render(const Player& player) {
@@ -139,8 +132,22 @@ bool Field::ChangeColor(const Dice& dice) {
     return true;
 }
 
+bool Field::ChangeTexture(const Dice& dice) {
+    if (!dice.GetValue()) {
+        return false;
+    }
+
+    int shift = dice.GetValue() - 1;
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureNames[E_DICE_1 + shift]);
+
+    return true;
+}
+
 void Field::Render(const Dice &dice, float xCur, float yCur) {
-    if (!ChangeColor(dice)) {
+    if (!ChangeTexture(dice)) {
         return;
     }
 
@@ -157,8 +164,17 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
         leftDiceOffset  = 0;
         rightDiceOffset = 0;   
     }
-    glRectf(xCur + leftDiceOffset,
-            yCur - upDiceOffset,
-            xCur + rightDiceOffset + slotLen,
-            yCur - downDiceOffset  - slotHeight);
+
+    float xStart = xCur + leftDiceOffset;
+    float yStart = yCur - upDiceOffset;
+    float xFinish = xCur + rightDiceOffset + slotLen;
+    float yFinish = yCur - downDiceOffset - slotHeight;
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0, 0.0); glVertex2f(xStart,  yStart);
+        glTexCoord2f(1.0, 0.0); glVertex2f(xFinish, yStart);
+        glTexCoord2f(1.0, 1.0); glVertex2f(xFinish, yFinish);
+        glTexCoord2f(0.0, 1.0); glVertex2f(xStart,  yFinish);
+    glEnd();
+
 }
