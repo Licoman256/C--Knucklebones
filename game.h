@@ -13,6 +13,7 @@ public:
 
 private:
     GLFWwindow* window;
+    int curPlayerIdx = 0;
     std::vector<Player> players;
     Field field;
     bool doneGlfwInit = false;
@@ -23,9 +24,10 @@ private:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void resize_callback(GLFWwindow* window, int width, int height);
 
+    void PrepareTextures();
+    void PrepareShaders();
     void Render();
 
-    int curPlayerIdx = 0;
     void Turn();
     void FillRandomSlots();
 };

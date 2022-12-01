@@ -1,9 +1,12 @@
 #include "game.h"
+#include "stb/stb_image.h"
+
+#include <GLFW/glfw3.h>
+
 
 Game::Game()
 	: window(nullptr)
-	, players(countPlayers)
-{
+	, players(countPlayers) {
 	_this = this;
 
 	/* Initialize the library */
@@ -15,7 +18,7 @@ Game::Game()
 	window = glfwCreateWindow(field.WINDOW_WIDTH, field.WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
 	if (!window) {
 		return;
-	} 
+	}
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
 
@@ -30,11 +33,15 @@ Game::Game()
 		field.AddToLayout(i, players[i]);
 	}
 
+	// gfx
+	PrepareTextures();
+	PrepareShaders();
+
 	// debug
 	FillRandomSlots();
 
+	// part of game logic
 	players[0].StartTurn();
-	
 }
 
 Game::~Game() {
