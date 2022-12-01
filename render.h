@@ -24,3 +24,16 @@ namespace colors {
                                   {99, 177, 129}, // green
                                 };
 }
+
+enum {
+    E_BACKGROUND = 0,
+    E_DICE_1,
+    E_DICE_2,
+    E_DICE_3,
+    E_DICE_4,
+    E_DICE_5,
+    E_DICE_6,
+    TEXTURE_LAST
+};
+const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;
+

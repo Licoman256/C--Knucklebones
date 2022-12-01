@@ -11,7 +11,11 @@ public:
     void AddToLayout(int idx, const Player &player);
     void RenderCommon();
     void Render(const Player& player);
-  
+
+    GLuint textureNames[COUNT_TEX_NAMES];
+    void PrepareTextures();
+    void PrepareShaders();
+
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
     // Needed to compensate for dimension difference so we can use slotHeight as x coordinate and slotLen as y
@@ -51,6 +55,8 @@ private:
     Layout GetLayout(const void* key);
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
-    void ChangeColor(const Dice& dice); //TODO replace with change texture
+    bool ChangeColor(const Dice& dice); //TODO replace with change texture
+
+    bool LoadTexture(int idxTx, char const* filename);
 
 };

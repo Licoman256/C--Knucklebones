@@ -4,30 +4,47 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#define TEX1_FILE_NAME  "data/cat.png"
+#define TEX1_FILE_NAME  
 
-void Game::PrepareTextures() {
+void Field::PrepareTextures() {
+	// generate names
+	glGenTextures(COUNT_TEX_NAMES, textureNames);
+
+	// load for each
+	LoadTexture(E_BACKGROUND, "data/cat.png");
+	LoadTexture(E_DICE_1,     "data/dice1.png");
+
+	// clean up
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+bool Field::LoadTexture(int idxTx, char const* filename) {
+
 	int widthImg, heightImg, numColCh;
-	unsigned char* bytes = stbi_load(TEX1_FILE_NAME, &widthImg, &heightImg, &numColCh, 0);
+	unsigned char* bytes = stbi_load(filename, &widthImg, &heightImg, &numColCh, 0);
 	if (!bytes) {
-		std::cout << "Not found texture file: " << TEX1_FILE_NAME << std::endl;
-		return;
+		std::cout << "Not found texture file: " << filename << std::endl;
+		return false;
 	}
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_PROXY_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_PROXY_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, textureNames[idxTx]);
 
-	glTexParameteri(GL_PROXY_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_PROXY_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// modulation
+	glTexEnvf(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	// filtration
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// wrapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
 
 	stbi_image_free(bytes);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
+	return true;
 }
 
 // Vertex Shader source code
@@ -48,7 +65,7 @@ const char* fragmentShaderSource =
 "   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
 "}\n\0";
 
-void Game::PrepareShaders() {
-	//unsigned int VBO;
-	//glGenBuffers(1, &VBO);
+void Field::PrepareShaders() {
+//	unsigned int VBO;
+//	glGenBuffers(1, &VBO);
 }

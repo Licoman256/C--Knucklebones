@@ -65,8 +65,28 @@ void Field::RenderCommon() {
 
 void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
     glColor3f(color.red, color.green,color.blue);
-    glRectf(xCur, yCur,
-            xCur + slotLen, yCur - slotHeight);
+//    glRectf(xCur, yCur,
+//            xCur + slotLen, yCur - slotHeight);
+
+
+    float startx = xCur;
+    float starty = yCur;
+    float sizeX = slotLen;
+    float sizeY = slotHeight;
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureNames[0]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(startx, starty);
+    glTexCoord2f(1.0, 0);
+    glVertex2f(startx + sizeX, starty);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2f(startx + sizeX, starty - sizeY);
+    glTexCoord2f(0, 1.0);
+    glVertex2f(startx, starty - sizeY);
+    glEnd();
+
 }
 
 void Field::Render(const Player& player) {
@@ -90,11 +110,11 @@ void Field::Render(const Player& player) {
     }
 }
 
-void Field::ChangeColor(const Dice& dice) {
+bool Field::ChangeColor(const Dice& dice) {
     // switch color according to dice value
     switch (dice.GetValue()) {
     case 0:
-        return;
+        return false;
     case 1:
         glColor3f(1.0f, 0.0f, 0.0f); // red
         break;
@@ -116,10 +136,13 @@ void Field::ChangeColor(const Dice& dice) {
     default:
         break;
     }
+    return true;
 }
 
 void Field::Render(const Dice &dice, float xCur, float yCur) {
-    ChangeColor(dice);
+    if (!ChangeColor(dice)) {
+        return;
+    }
 
     float leftDiceOffset  = (slotLen    - slotHeight * dimCoef) / 2;
     float rightDiceOffset = (slotLen    + slotHeight * dimCoef) / 2 - slotLen;

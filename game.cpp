@@ -34,8 +34,8 @@ Game::Game()
 	}
 
 	// gfx
-	PrepareTextures();
-	PrepareShaders();
+	field.PrepareTextures();
+	field.PrepareShaders();
 
 	// debug
 	FillRandomSlots();
