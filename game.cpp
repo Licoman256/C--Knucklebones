@@ -13,7 +13,6 @@ Game::Game()
 	if (!glfwInit())
 		return;
 	doneGlfwInit = true;
-
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(field.WINDOW_WIDTH, field.WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
 	if (!window) {
@@ -36,6 +35,7 @@ Game::Game()
 	// gfx
 	field.PrepareTextures();
 	field.PrepareShaders();
+	field.EnableTransparancy();
 
 	// debug
 	FillRandomSlots();

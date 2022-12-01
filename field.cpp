@@ -54,32 +54,44 @@ void Field::AddToLayout(int idx, const Player& player) {
 }
 
 void Field::RenderCommon() {
-    // window background
+    // clear prev frame
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // window background
+    RenderTexture(-1.0, 1.0, 1.0, -1.0, colors::white, E_BACKGROUND);
+
     // field background
-    glColor3f(colors::fieldBackground.red, colors::fieldBackground.green, colors::fieldBackground.blue);
-    glRectf(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight);
+    RenderTexture(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight, colors::fieldBackground, E_FIELD);
 }
 
 void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
-    glColor3f(color.red, color.green,color.blue);
 
-    float startx = xCur;
-    float starty = yCur;
-    float sizeX = slotLen;
-    float sizeY = slotHeight;
+    float xStart  = xCur;
+    float yStart  = yCur;
+    float xFinish = xCur + slotLen;
+    float yFinish = yCur - slotHeight;
 
+    RenderTexture(xStart, yStart, xFinish, yFinish, color, E_SLOT);
+}
+
+void Field::ChangeTexture(int idxTx) {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureNames[0]);
+    glBindTexture(GL_TEXTURE_2D, textureNames[idxTx]);
+}
+
+void Field::RenderTexture(float xStart, float yStart, float xFinish, float yFinish, const MyColor& color, int idxTx) {
+
+    glColor3f(color.red, color.green, color.blue);
+    ChangeTexture(idxTx);
+
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(startx, starty);
-        glTexCoord2f(1.0, 0.0); glVertex2f(startx + sizeX, starty);
-        glTexCoord2f(1.0, 1.0); glVertex2f(startx + sizeX, starty - sizeY);
-        glTexCoord2f(0.0, 1.0); glVertex2f(startx, starty - sizeY);
+        glTexCoord2f(0.0, 0.0); glVertex2f(xStart, yStart);
+        glTexCoord2f(1.0, 0.0); glVertex2f(xFinish, yStart);
+        glTexCoord2f(1.0, 1.0); glVertex2f(xFinish, yFinish);
+        glTexCoord2f(0.0, 1.0); glVertex2f(xStart, yFinish);
     glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
 }
 
 void Field::Render(const Player& player) {
@@ -132,22 +144,9 @@ bool Field::ChangeColor(const Dice& dice) {
     return true;
 }
 
-bool Field::ChangeTexture(const Dice& dice) {
-    if (!dice.GetValue()) {
-        return false;
-    }
-
-    int shift = dice.GetValue() - 1;
-
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureNames[E_DICE_1 + shift]);
-
-    return true;
-}
-
 void Field::Render(const Dice &dice, float xCur, float yCur) {
-    if (!ChangeTexture(dice)) {
+    auto value = dice.GetValue();
+    if (!value) {
         return;
     }
 
@@ -170,11 +169,7 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
     float xFinish = xCur + rightDiceOffset + slotLen;
     float yFinish = yCur - downDiceOffset - slotHeight;
 
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(xStart,  yStart);
-        glTexCoord2f(1.0, 0.0); glVertex2f(xFinish, yStart);
-        glTexCoord2f(1.0, 1.0); glVertex2f(xFinish, yFinish);
-        glTexCoord2f(0.0, 1.0); glVertex2f(xStart,  yFinish);
-    glEnd();
+    int shift = value - 1;
+    RenderTexture(xStart, yStart, xFinish, yFinish, colors::white, E_DICE_1 + shift);
 
 }

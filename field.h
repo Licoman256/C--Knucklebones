@@ -15,6 +15,7 @@ public:
     GLuint textureNames[COUNT_TEX_NAMES];
     void PrepareTextures();
     void PrepareShaders();
+    void EnableTransparancy();
 
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
@@ -58,7 +59,8 @@ private:
     void Render(const Dice& dice, float xCur, float yCur);
 
     bool ChangeColor(const Dice& dice);
-    bool ChangeTexture(const Dice& dice);
+    void ChangeTexture(int idxTx);
 
     bool LoadTexture(int idxTx, char const* filename);
+    void RenderTexture(float xStart, float yStart, float xFinish, float yFinish, const MyColor& color, int idxTx);
 };

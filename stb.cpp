@@ -14,8 +14,6 @@ void Field::PrepareTextures() {
 	for (int i = 0; i < TEXTURE_LAST; i++) {
 		LoadTexture(i, textFileNames[i]);
 	}
-	//LoadTexture(E_BACKGROUND, "data/cat.png");
-	//LoadTexture(E_DICE_1,     "data/dice1.png");
 
 	// clean up
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -43,11 +41,17 @@ bool Field::LoadTexture(int idxTx, char const* filename) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, bytes);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
 
 	stbi_image_free(bytes);
 
 	return true;
+}
+
+void Field::EnableTransparancy() {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
 }
 
 //// Vertex Shader source code
