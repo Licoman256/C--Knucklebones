@@ -30,11 +30,11 @@ private:
 
     const float xSlotOffsetCoeff{ 0.25f }; // offset to slot ratio
     const float ySlotOffsetCoeff{ 0.25f };
-    constexpr float CalcOffset(const float f, const float coeff, const int count) {
-        return f * coeff / ((coeff + 1) * count + coeff);
+    constexpr float CalcOffset(const float f, const float coeff, const int count, int offSetsBetween) {
+        return f * coeff / ((coeff + 1) * count + coeff  * offSetsBetween);
     }
-    const float xOffset{ CalcOffset(fieldLen,    xSlotOffsetCoeff, countGroupsPerPlayer) };
-    const float yOffset{ CalcOffset(fieldHeight, ySlotOffsetCoeff, countRowsPerGroup) / countPlayers };
+    const float xOffset{ CalcOffset(fieldLen,    xSlotOffsetCoeff, countGroupsPerPlayer, 1) };
+    const float yOffset{ CalcOffset(fieldHeight, ySlotOffsetCoeff, countRowsPerGroup, 3) / countPlayers};
 
     const float xSlotOrigin{ xFieldOrigin + xOffset };
     const float ySlotOrigin{ yFieldOrigin - yOffset };

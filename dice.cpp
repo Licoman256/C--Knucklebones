@@ -3,7 +3,8 @@
 
 Dice::Dice()
 	: value(0)
-	, isOnField(false) {}
+	, isOnField(false)
+	, power(1) {}
 
 void Dice::Throw() {
 	value = random::uni(random::rng);
@@ -12,6 +13,14 @@ void Dice::Throw() {
 
 int Dice::GetValue() const {
 	return value;
+}
+
+void Dice::SetPower(int pw) {
+	 power = pw;
+}
+
+int Dice::GetPower() const {
+	return power;
 }
 
 void Dice::MoveToField() {

@@ -44,7 +44,7 @@ void Field::AddToLayout(int idx, const Player& player) {
             mapLayouts[idx].ySlotOrigin = 
                 mapLayouts[idx-1].ySlotOrigin 
                 - (slotHeight + yOffset) * countRowsPerGroup
-                - yOffset;
+                - yOffset * 3;
     }
 
     // left box depends on slot

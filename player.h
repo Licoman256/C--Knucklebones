@@ -10,7 +10,7 @@ public:
 	void FillRandomSlots();
 	bool Add(Dice &toplace);
 	int GetScore() const;
-	
+	void SetPowers();
 	~Group();
 	
 	std::vector<Dice> dices;

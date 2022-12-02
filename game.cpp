@@ -3,7 +3,6 @@
 
 #include <GLFW/glfw3.h>
 
-
 Game::Game()
 	: window(nullptr)
 	, players(countPlayers) {

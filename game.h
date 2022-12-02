@@ -29,3 +29,14 @@ private:
     void Turn();
     void FillRandomSlots();
 };
+
+enum GameState{
+    THROWING_DICE,
+    CHANGING_ACTIVE_PLAYER,
+    WAITING_PLAYER_INPUT,
+    MOVING_DICE_TO_FIELD,
+    FALLING_DICE,
+    DESTROYING_DICES,
+    UPDATING_SCORE,
+
+};
