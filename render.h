@@ -1,6 +1,6 @@
 #pragma once
 #include <GLFW/glfw3.h>
-
+#include "player.h"
 struct MyColor {
     float red;
     float green;
@@ -24,7 +24,15 @@ namespace colors {
                                   {99, 177, 129}, // green
                                 };
     const MyColor white = { 256, 256, 256 };
-}
+
+    const MyColor dicePowers[] = { white,
+                                   {177, 99, 101},
+                                   {99, 131, 177},
+                                   {163, 177, 99},
+                                   {160, 99, 177},
+                                   {99, 177, 129}
+                                  };
+};
 
 enum {
     

@@ -144,6 +144,10 @@ bool Field::ChangeColor(const Dice& dice) {
     return true;
 }
 
+void Field::ChangeDiceColor(int pow, MyColor& color) {
+    color = colors::dicePowers[pow - 1];
+}
+
 void Field::Render(const Dice &dice, float xCur, float yCur) {
     auto value = dice.GetValue();
     if (!value) {
@@ -170,6 +174,8 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
     float yFinish = yCur - downDiceOffset - slotHeight;
 
     int shift = value - 1;
-    RenderTexture(xStart, yStart, xFinish, yFinish, colors::white, E_DICE_1 + shift);
+    MyColor color;
+    ChangeDiceColor(dice.GetPower(), color);
+    RenderTexture(xStart, yStart, xFinish, yFinish, color, E_DICE_1 + shift);
 
 }

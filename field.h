@@ -58,7 +58,8 @@ private:
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
 
-    bool ChangeColor(const Dice& dice);
+    bool ChangeColor(const Dice& dice); // not used
+    void ChangeDiceColor(int pow, MyColor& color);
     void ChangeTexture(int idxTx);
 
     bool LoadTexture(int idxTx, char const* filename);
