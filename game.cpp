@@ -1,8 +1,6 @@
 #include "game.h"
 #include "stb/stb_image.h"
 
-#include <GLFW/glfw3.h>
-
 Game::Game()
 	: window(nullptr)
 	, players(countPlayers) {

@@ -1,7 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "game.h"
 #include "stb/stb_image.h"
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 #define TEX1_FILE_NAME  

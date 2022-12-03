@@ -1,6 +1,6 @@
 #pragma once
+
 #include "player.h"
-#include "render.h"
 
 static const int countPlayers = 3;
 

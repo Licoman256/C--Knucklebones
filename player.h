@@ -1,6 +1,8 @@
 #pragma once
-#include "dice.h"
 #include <vector>
+
+#include "dice.h"
+
 const int countGroupsPerPlayer = 4;
 const int countRowsPerGroup = 3;
 

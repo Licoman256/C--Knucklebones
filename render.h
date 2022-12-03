@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include "player.h"
+#include <ft2build.h>
+
 struct MyColor {
     float red;
     float green;
