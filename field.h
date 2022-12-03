@@ -2,7 +2,7 @@
 #include "player.h"
 #include "render.h"
 
-static const int countPlayers = 2;
+static const int countPlayers = 3;
 
 class Field {
 public:

@@ -1,7 +1,7 @@
 #pragma once
 #include "dice.h"
 #include <vector>
-const int countGroupsPerPlayer = 3;
+const int countGroupsPerPlayer = 4;
 const int countRowsPerGroup = 3;
 
 class Group {
