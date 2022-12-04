@@ -53,6 +53,7 @@ void Field::AddToLayout(int idx, const Player& player) {
 }
 
 void Field::UpdateDimCoeff(GLFWwindow* window) {
+    // Needed to compensate for dimension difference so we can use slotHeight as x coordinate and slotLen as y
     int height, width;
     glfwGetWindowSize(window, &width, &height);
     dimCoef = static_cast<float>(height) / static_cast<float>(width);
