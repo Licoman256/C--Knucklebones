@@ -24,9 +24,9 @@ Game::Game()
 	// tell OpenGL where to render
 	glViewport(0, 0, field.WINDOW_WIDTH, field.WINDOW_HEIGHT);
 
-	// calc graphic sizes
+	// bind all players
 	for (int i = 0; i < countPlayers; i++) {
-		field.AddToLayout(i, players[i]);
+		players[i].Bind(&field, i);
 	}
 
 	// gfx
@@ -56,33 +56,41 @@ void Game::FillRandomSlots()
 #endif // FILLSLOTS
 }
 
-float Game::CalcDimCoeff() {
-	int height, width;
-	glfwGetWindowSize(window, &width, &height);
-	return static_cast<float>(height) / static_cast<float>(width);
+void Game::Render() {
+	// part that renders always 
+	field.RenderCommon(window);
+
+	// other depends on the main state
+	FillRQueue();
+	for (auto rElem : rQueue) {
+		rElem->Render();
+	}
+
+	// Swap front and back buffers
+	glfwSwapBuffers(window);
 }
 
-void Game::Render() {
-	field.dimCoef = CalcDimCoeff();
-	field.RenderCommon();
-	for (const auto& player : players) {
-		field.Render(player);
-	}
-	// popup.Render();
+void Game::FillRQueue() {
+	rQueue.clear();
 
-	/* Swap front and back buffers */
-	glfwSwapBuffers(window);
+	// do we need players?
+	if (ES_ANNOUNCE_ROUND < mainState && mainState < ES_GAME_END_WIN) {
+		for (auto& player : players) {
+			rQueue.push_back(&player);
+		}
+	}
+
+	// 
+	// fill render queue depending on main state
+	// popup.Render();
 }
 
 void Game::RunMainLoop() {
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		Render();
-		/* Poll for and process events */
 		glfwPollEvents();
-
-		// ui.HandleCommands();
-		Turn();
+		Tick();
 	}
 }
  
@@ -101,7 +109,7 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 	}
 }
 
-void Game::Turn() {
+void Game::Tick() {
 
 	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
 		int grIdx = pressedKey - '0';
@@ -114,5 +122,9 @@ void Game::Turn() {
 		}
 	}
 
-	pressedKey = ' ';
+	if (pressedKey == ' ') {
+		mainState = ES_THROW_DICE;
+	}
+
+	pressedKey = 0;
 }

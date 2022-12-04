@@ -1,5 +1,6 @@
 #include "game.h"
 #include "dice.h"
+
 Group::Group(int _rows = countRowsPerGroup)
 	: dices(_rows)
 {}
@@ -105,4 +106,16 @@ int Group::GetScore() const {
 	}
 	return total;
 	
+}
+
+void Player::Bind(Field* _field, int idx) 	{
+	// we'll need it on render
+	field = _field;
+
+	// calc graphic sizes
+	field->AddToLayout(idx, *this);
+}
+
+void Player::Render() {
+	field->Render(*this);
 }

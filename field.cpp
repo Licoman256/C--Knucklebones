@@ -52,7 +52,16 @@ void Field::AddToLayout(int idx, const Player& player) {
         - (slotHeight + yOffset) * (countRowsPerGroup - 1) / 2;
 }
 
-void Field::RenderCommon() {
+void Field::UpdateDimCoeff(GLFWwindow* window) {
+    int height, width;
+    glfwGetWindowSize(window, &width, &height);
+    dimCoef = static_cast<float>(height) / static_cast<float>(width);
+}
+
+void Field::RenderCommon(GLFWwindow* window) {
+    // dimensions
+    UpdateDimCoeff(window);
+
     // clear prev frame
     glClearColor(colors::windowBackground.red, colors::windowBackground.green, colors::windowBackground.blue, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

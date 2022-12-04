@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <queue>
 
 #include "dice.h"
 
@@ -18,12 +19,13 @@ public:
 	std::vector<Dice> dices;
 };
 
-class Player {
+class Player : public RenderElement {
 public:
 	std::vector<Group> groups;
 	Dice boxDice;
 	bool isActive;
 	Player();
+	void Bind(class Field* _field, int idx);
 	void FillRandomSlots();
 	void StartTurn();
 	bool EndTurn(int grIdx);
@@ -33,4 +35,8 @@ public:
 private:
 	int totalScore;
 	bool Add(Dice& toplace, Group& gr);
+
+	class Field* field = nullptr;
+	virtual void Render();
 };
+

@@ -62,3 +62,8 @@ static char const* textFileNames[] = {
 };
 
 const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;
+
+class RenderElement {
+public:
+    virtual void Render() = 0;
+};

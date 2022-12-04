@@ -9,7 +9,7 @@ public:
     Field();
     ~Field();
     void AddToLayout(int idx, const Player &player);
-    void RenderCommon();
+    void RenderCommon(GLFWwindow* window);
     void Render(const Player& player);
 
     GLuint textureNames[COUNT_TEX_NAMES];
@@ -54,6 +54,7 @@ private:
 
     void ClearLayout();
     Layout GetLayout(const void* key);
+    void UpdateDimCoeff(GLFWwindow* window);
 
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
