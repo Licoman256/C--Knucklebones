@@ -1,4 +1,5 @@
 #include "game.h"
+#include <string>
 
 Field::Field() {
     ClearLayout();
@@ -111,12 +112,15 @@ void Field::RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyC
 void Field::Render(const Player& player) {
     Layout lay = GetLayout(&player);
     float xCur = xSlotOrigin;
-    RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
 
+    // box
+    RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
+    Render(player.totalScore, xBoxOrigin, lay.yBoxOrigin - (slotHeight + yOffset));
     if (player.isActive) {
         Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
     }
-
+    
+    // all slots
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
         float yCur = lay.ySlotOrigin;
@@ -126,6 +130,49 @@ void Field::Render(const Player& player) {
             // render dice over the slot
             Render(player.groups[i].dices[j], xCur, yCur);
         }
+        // render group score
+        Render(player.groups[i].GetScore(), xCur, yCur);
+    }
+}
+
+void Field::Render(int score, float xCur, float yCur) {
+    // count digits
+    float numOfDigits = score == 0 ? 1 : 0;
+    score = abs(score); // handle negative numbers as well
+    auto tmpScore = score;
+    while (tmpScore > 0) {
+        numOfDigits++;
+        tmpScore /= 10;
+    }
+
+    // process
+    Vert texStart;
+    Vert texFinish;
+    Vert rectangleStart;
+    Vert rectangleFinish;
+
+
+    tmpScore = score;
+    for (int i = 0; i < numOfDigits; i++, tmpScore /= 10) {
+        // choose texture coordinates according to char
+        int digit = tmpScore % 10;
+        if (digit == 0) {
+            texStart =  { 0.9f, 0.0f };
+            texFinish = { 1.0f, 1.0f };
+        } else {
+            texStart =  { 0.1f * digit - 0.1f, 0.0f };
+            texFinish = { 0.1f * digit,        1.0f };
+        }
+
+        // calculate coordinates
+        float slotCentre = xCur + slotLen / 2;
+
+        rectangleStart  = { slotCentre + digitLen * (numOfDigits / 2 - i - 1),           yCur};
+        rectangleFinish = { slotCentre + digitLen * (numOfDigits / 2 - i) , yCur - yOffset};
+
+
+        // render
+        RenderTexture(rectangleStart, rectangleFinish, colors::white, E_NUMBERS, texStart, texFinish);
     }
 }
 

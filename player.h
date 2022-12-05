@@ -24,6 +24,7 @@ public:
 	std::vector<Group> groups;
 	Dice boxDice;
 	bool isActive;
+	int totalScore;
 	Player();
 	void Bind(class Field* _field, int idx);
 	void FillRandomSlots();
@@ -33,7 +34,6 @@ public:
 
 	~Player();
 private:
-	int totalScore;
 	bool Add(Dice& toplace, Group& gr);
 
 	class Field* field = nullptr;

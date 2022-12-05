@@ -24,6 +24,7 @@ protected:
 
     const float slotLen{ xOffset / xSlotOffsetCoeff };
     const float slotHeight{ yOffset / ySlotOffsetCoeff };
+    const float digitLen = xOffset / 2;
 
     const float xBoxOrigin{ xSlotOrigin - (slotLen + 1.5f * xOffset) };
 };
@@ -61,6 +62,7 @@ private:
 
     void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(const Dice& dice, float xCur, float yCur);
+    void Render(int score, float xCur, float yCur);
 
     bool ChangeColor(const Dice& dice); // not used
     void ChangeDiceColor(int pow, MyColor& color);
