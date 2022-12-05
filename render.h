@@ -1,7 +1,5 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 struct MyColor {
     float red;
@@ -47,6 +45,7 @@ enum {
     E_DICE_6,
     E_FIELD,
     E_SLOT,
+    E_NUMBERS,
     TEXTURE_LAST
 };
 
@@ -60,6 +59,7 @@ static char const* textFileNames[] = {
     "data/dice6.png",
     "data/field.png",
     "data/slot.png",
+    "data/numbers.png"
 };
 
 const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;

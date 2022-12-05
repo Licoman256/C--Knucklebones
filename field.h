@@ -67,5 +67,8 @@ private:
     void ChangeTexture(int idxTx);
 
     bool LoadTexture(int idxTx, char const* filename);
-    void RenderTexture(float xStart, float yStart, float xFinish, float yFinish, const MyColor& color, int idxTx);
+    struct Vert {
+        float x; float y;
+    };
+    void RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish);
 };

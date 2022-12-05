@@ -53,25 +53,6 @@ void Field::EnableTransparancy() {
     glEnable(GL_TEXTURE_2D);
 }
 
-void Field::PrepareFont() {
-	// init library
-	FT_Library ft;
-	if (FT_Init_FreeType(&ft)) {
-		fprintf(stderr, "Could not init freetype library\n");
-		return;
-	}
-	 // load the font
-	FT_Face face;
-	if (FT_New_Face(ft, "data/arial.ttf", 0, &face)) {
-		fprintf(stderr, "Could not open font\n");
-		return;
-	}
-
-	// set font height
-	FT_Set_Pixel_Sizes(face, 0, 48);
-
-}
-
 void Field::PrepareShaders() {
 
 }

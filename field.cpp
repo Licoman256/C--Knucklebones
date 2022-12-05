@@ -68,20 +68,25 @@ void Field::RenderCommon(GLFWwindow* window) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // window background
-    RenderTexture(-1.0, 1.0, 1.0, -1.0, colors::white, E_BACKGROUND);
+    Vert start { -1.0, 1.0 };
+    Vert finish{ 1.0, -1.0 };
+    Vert txStart { 0.0, 0.0 };
+    Vert txFinish{ 1.0, 1.0 };
+    RenderTexture(start, finish, colors::white, E_BACKGROUND, txStart, txFinish);
 
     // field background
-    RenderTexture(xFieldOrigin, yFieldOrigin, xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight, colors::fieldBackground, E_FIELD);
+    start =  { xFieldOrigin,            yFieldOrigin };
+    finish = { xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight};
+    RenderTexture(start, finish, colors::fieldBackground, E_FIELD, txStart, txFinish);
 }
 
 void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
 
-    float xStart  = xCur;
-    float yStart  = yCur;
-    float xFinish = xCur + slotLen;
-    float yFinish = yCur - slotHeight;
-
-    RenderTexture(xStart, yStart, xFinish, yFinish, color, E_SLOT);
+    Vert start  { xCur,           yCur };
+    Vert finish { xCur + slotLen, yCur - slotHeight };
+    Vert txStart{ 0.0, 0.0 };
+    Vert txFinish{ 1.0, 1.0 };
+    RenderTexture(start, finish, color, E_SLOT, txStart, txFinish);
 }
 
 void Field::ChangeTexture(int idxTx) {
@@ -89,16 +94,16 @@ void Field::ChangeTexture(int idxTx) {
     glBindTexture(GL_TEXTURE_2D, textureNames[idxTx]);
 }
 
-void Field::RenderTexture(float xStart, float yStart, float xFinish, float yFinish, const MyColor& color, int idxTx) {
+void Field::RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish) {
 
     glColor3f(color.red, color.green, color.blue);
     ChangeTexture(idxTx);
 
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0); glVertex2f(xStart, yStart);
-        glTexCoord2f(1.0, 0.0); glVertex2f(xFinish, yStart);
-        glTexCoord2f(1.0, 1.0); glVertex2f(xFinish, yFinish);
-        glTexCoord2f(0.0, 1.0); glVertex2f(xStart, yFinish);
+        glTexCoord2f(texStart.x,  texStart.y); glVertex2f( rectangleStart.x,  rectangleStart.y);
+        glTexCoord2f(texFinish.x, texStart.y); glVertex2f( rectangleFinish.x, rectangleStart.y);
+        glTexCoord2f(texFinish.x, texFinish.y); glVertex2f(rectangleFinish.x, rectangleFinish.y);
+        glTexCoord2f(texStart.x,  texFinish.y); glVertex2f(rectangleStart.x,  rectangleFinish.y);
     glEnd();
     glDisable(GL_TEXTURE_2D);
 }
@@ -185,6 +190,9 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
     int shift = value - 1;
     MyColor color;
     ChangeDiceColor(dice.GetPower(), color);
-    RenderTexture(xStart, yStart, xFinish, yFinish, color, E_DICE_1 + shift);
-
+    Vert start =  { xCur + leftDiceOffset,            yCur - upDiceOffset };
+    Vert finish = { xCur + rightDiceOffset + slotLen, yCur - downDiceOffset - slotHeight };
+    Vert txStart{ 0.0, 0.0 };
+    Vert txFinish{ 1.0, 1.0 };
+    RenderTexture(start, finish, color, E_DICE_1 + shift, txStart, txFinish);
 }
