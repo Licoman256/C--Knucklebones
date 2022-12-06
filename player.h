@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <queue>
-
+#include "render.h"
 #include "dice.h"
 
 const int countGroupsPerPlayer = 4;
@@ -27,6 +27,7 @@ public:
 	Dice boxDice;
 	bool isActive;
 	int totalScore;
+	bool isAI;
 
 	Player();
 	void Bind(class Field* _field, int idx);

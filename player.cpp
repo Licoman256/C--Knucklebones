@@ -10,6 +10,7 @@ Group::~Group()
 Player::Player()
 	: totalScore(0)
 	, isActive(false)
+	, isAI(true)
 {
 	groups.reserve(countGroupsPerPlayer);
 	Group dummy(countRowsPerGroup);

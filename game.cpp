@@ -1,5 +1,6 @@
 #include "game.h"
 #include "stb/stb_image.h"
+#include "random.h"
 
 Game::Game()
 	: window(nullptr)
@@ -38,6 +39,7 @@ Game::Game()
 	FillRandomSlots();
 
 	// part of game logic
+	players[0].isAI = false;
 	players[0].StartTurn();
 }
 
@@ -143,4 +145,8 @@ void Game::Tick() {
 	}
 
 	pressedKey = 0;
+
+	if (players[curPlayerIdx].isAI) {
+		pressedKey =  random::randomGroup(random::rng) + '0';
+	}
 }
