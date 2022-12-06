@@ -9,10 +9,11 @@ public:
 
 	int GetPower() const;
 	void SetPower(int pw);
+	void Destroy();
 	~Dice();	
-
-private:
 	int value;
+private:
+	
 	bool isOnField;
 	int power;
 };

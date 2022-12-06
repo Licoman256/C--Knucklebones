@@ -21,33 +21,49 @@ Player::Player()
 Player::~Player()
 {}
 
-
-void Player::FillRandomSlots() {
-	for (auto& grp : groups) {
-		grp.FillRandomSlots();
-	}
-	RecalcTotal();
-}
-
-void Group::FillRandomSlots() {
-	for (int i = 0; i < dices.size(); i++) {
-		Dice dummy;
-		dummy.Throw();
-		Add(dummy);
-	}
-}
-
 void Player::StartTurn() {
 	boxDice.Throw();
 	isActive = true;
 }
 
-bool Player::EndTurn(int grIdx) {
-	bool added = Add(boxDice, groups[grIdx]);
-	if (added) {
-		isActive = false;
+void Player::DestroyDices(int diceVal, int grIdx) {	
+		groups[grIdx].DestroyDices(diceVal);
+		RecalcTotal();
+}
+
+void Group::DestroyDices(int diceVal) {
+	bool destroyed = false;
+	for (auto& dice : dices) {
+		if (dice.GetValue() == diceVal) {
+			dice.Destroy();
+			destroyed = true;
+		}
 	}
-	return added;
+
+	if (destroyed) {
+		FallDown();
+	}
+}
+
+void Group::FallDown() {
+	for (int i = static_cast<int>(dices.size()); --i >= 0;) {
+		auto val = dices[i].GetValue();
+		auto pow = dices[i].GetPower();
+		if (val) {
+			dices[i].Destroy();
+			// copy as low as possible
+			for (int i = static_cast<int>(dices.size()); --i >= 0;) {
+				dices[i].value = val;
+				dices[i].SetPower(pow);
+				dices[i].MoveToField();
+				break;
+			}
+		}
+	}
+}
+
+bool Player::EndTurn(int grIdx) {
+	return Add(boxDice, groups[grIdx]);
 }
 
 bool Player::Add(Dice &toplace, Group &gr) {
@@ -118,4 +134,20 @@ void Player::Bind(Field* _field, int idx) 	{
 
 void Player::Render() {
 	field->Render(*this);
+}
+
+
+void Player::FillRandomSlots() {
+	for (auto& grp : groups) {
+		grp.FillRandomSlots();
+	}
+	RecalcTotal();
+}
+
+void Group::FillRandomSlots() {
+	for (int i = 0; i < dices.size(); i++) {
+		Dice dummy;
+		dummy.Throw();
+		Add(dummy);
+	}
 }

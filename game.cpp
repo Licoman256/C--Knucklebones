@@ -110,10 +110,20 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 void Game::Tick() {
-
+	// player turn
 	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
 		int grIdx = pressedKey - '0';
+		
+		auto diceVal = players[curPlayerIdx].boxDice.GetValue();
 		if (players[curPlayerIdx].EndTurn(grIdx)) {
+			// tell other players to remove their dices
+			for (auto &plr: players ) {
+				if (!plr.isActive) {
+					plr.DestroyDices(diceVal, grIdx);
+				}
+			}
+			// end current turn
+			players[curPlayerIdx].isActive = false;
 			// loop around
 			curPlayerIdx++;
 			curPlayerIdx %= countPlayers;

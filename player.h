@@ -12,6 +12,8 @@ public:
 	Group(int _rows);
 	void FillRandomSlots();
 	bool Add(Dice &toplace);
+	void DestroyDices(int diceVal);
+	void FallDown();
 	int GetScore() const;
 	void SetPowers();
 	~Group();
@@ -25,17 +27,19 @@ public:
 	Dice boxDice;
 	bool isActive;
 	int totalScore;
+
 	Player();
 	void Bind(class Field* _field, int idx);
-	void FillRandomSlots();
 	void StartTurn();
+	void DestroyDices(int diceVal, int grIdx);
 	bool EndTurn(int grIdx);
 	void RecalcTotal();
 
 	~Player();
+	// debug
+	void FillRandomSlots();
 private:
 	bool Add(Dice& toplace, Group& gr);
-
 	class Field* field = nullptr;
 	virtual void Render();
 };

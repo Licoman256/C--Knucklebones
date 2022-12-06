@@ -27,4 +27,10 @@ void Dice::MoveToField() {
 	isOnField = true;
 }
 
+void Dice::Destroy() {
+	isOnField = false;
+	value = 0;
+	power = 1;
+}
+
 Dice::~Dice() {}
