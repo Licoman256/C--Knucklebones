@@ -106,15 +106,20 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 	if (action == GLFW_PRESS) {
 		_this->pressedKey = key;
 	}
-	if (key == GLFW_KEY_E || key == GLFW_KEY_ESCAPE) {
+	if (key == GLFW_KEY_ESCAPE) {
 		 glfwSetWindowShouldClose(window, 1);
 	}
 }
 
 void Game::Tick() {
+	// ai players do random moves
+	if (players[curPlayerIdx].isAI) {
+		pressedKey = random::randomGroup(random::rng) + '1';
+	}
+
 	// player turn
-	if ('0' <= pressedKey && pressedKey < '0' + countGroupsPerPlayer) {
-		int grIdx = pressedKey - '0';
+	if ('1' <= pressedKey && pressedKey < '1' + countGroupsPerPlayer) {
+		int grIdx = pressedKey - '1';
 		
 		auto diceVal = players[curPlayerIdx].boxDice.GetValue();
 		auto& curPlayer = players[curPlayerIdx];
@@ -146,7 +151,4 @@ void Game::Tick() {
 
 	pressedKey = 0;
 
-	if (players[curPlayerIdx].isAI) {
-		pressedKey =  random::randomGroup(random::rng) + '0';
-	}
 }
