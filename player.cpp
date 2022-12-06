@@ -47,17 +47,18 @@ void Group::DestroyDices(int diceVal) {
 
 void Group::FallDown() {
 	for (int i = static_cast<int>(dices.size()); --i >= 0;) {
+		// save for later
 		auto val = dices[i].GetValue();
 		auto pow = dices[i].GetPower();
 		if (val) {
 			dices[i].Destroy();
+
 			// copy as low as possible
-			for (int i = static_cast<int>(dices.size()); --i >= 0;) {
-				dices[i].value = val;
-				dices[i].SetPower(pow);
-				dices[i].MoveToField();
-				break;
-			}
+			Dice toPlace;
+			toPlace.value = val;
+			toPlace.SetPower(pow);
+			toPlace.MoveToField();
+			Add(toPlace);
 		}
 	}
 }

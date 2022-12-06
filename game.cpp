@@ -115,7 +115,8 @@ void Game::Tick() {
 		int grIdx = pressedKey - '0';
 		
 		auto diceVal = players[curPlayerIdx].boxDice.GetValue();
-		if (players[curPlayerIdx].EndTurn(grIdx)) {
+		auto& curPlayer = players[curPlayerIdx];
+		if (curPlayer.EndTurn(grIdx)) {
 			// tell other players to remove their dices
 			for (auto &plr: players ) {
 				if (!plr.isActive) {
@@ -123,7 +124,12 @@ void Game::Tick() {
 				}
 			}
 			// end current turn
-			players[curPlayerIdx].isActive = false;
+			curPlayer.isActive = false;
+
+			if (true) {
+
+			}
+
 			// loop around
 			curPlayerIdx++;
 			curPlayerIdx %= countPlayers;
