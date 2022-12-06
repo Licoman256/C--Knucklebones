@@ -1,6 +1,7 @@
 #include "game.h"
 #include "stb/stb_image.h"
 #include "random.h"
+#include <iostream>
 
 Game::Game()
 	: window(nullptr)
@@ -37,9 +38,11 @@ Game::Game()
 
 	// debug
 	FillRandomSlots();
+	mainState = ES_WAIT_PLAYER_INPUT;
 
 	// part of game logic
-	players[0].isAI = false;
+	
+	//players[0].isAI = false;
 	players[0].StartTurn();
 }
 
@@ -92,9 +95,9 @@ void Game::RunMainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		Render();
 		glfwPollEvents();
-		//if (mainState == ES_WAIT_PLAYER_INPUT) {
+		if (mainState == ES_WAIT_PLAYER_INPUT) {
 			Tick();
-		//}	
+		}	
 	}
 }
  
@@ -150,9 +153,40 @@ void Game::Tick() {
 	}
 
 	//if (pressedKey == ' ') {
-		mainState = ES_THROW_DICE;
+	//	mainState = ES_THROW_DICE;
 	//}
 
 	pressedKey = 0;
 
+}
+
+void Game::End() {
+	// find out max score
+	int max = -1;
+	for (int i = static_cast<int>(players.size()); --i >= 0;) {
+		if (max < players[i].totalScore) {	
+			max = players[i].totalScore;
+		}
+	}
+
+	// mark all winners
+	bool isVictorious[countPlayers];
+	for (int i = 0; i < countPlayers; i++) {
+		isVictorious[i] = false;
+	}
+	int countOfWinners = 0;
+
+	for (int i = static_cast<int>(players.size()); --i >= 0;) {
+			if (max == players[i].totalScore) {
+				countOfWinners++;
+				isVictorious[i] = true;
+			}
+	}
+	mainState = ES_UPDATE_SCORE;
+	for (int i = 0; i < countPlayers; i++) {
+		if (isVictorious[i]) {
+			std::cout << "Player " <<  i + 1 << " wins with total score " << max << std::endl;
+		}
+	}
+	
 }
