@@ -92,7 +92,9 @@ void Game::RunMainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		Render();
 		glfwPollEvents();
-		Tick();
+		//if (mainState == ES_WAIT_PLAYER_INPUT) {
+			Tick();
+		//}	
 	}
 }
  
@@ -133,8 +135,10 @@ void Game::Tick() {
 			// end current turn
 			curPlayer.isActive = false;
 
-			if (true) {
-
+			for (auto& plr : players) {
+				if (plr.isFull) {
+					End();
+				}
 			}
 
 			// loop around
@@ -145,9 +149,9 @@ void Game::Tick() {
 		}
 	}
 
-	if (pressedKey == ' ') {
+	//if (pressedKey == ' ') {
 		mainState = ES_THROW_DICE;
-	}
+	//}
 
 	pressedKey = 0;
 

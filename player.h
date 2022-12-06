@@ -19,6 +19,8 @@ public:
 	~Group();
 	
 	std::vector<Dice> dices;
+	int countDices = 0;
+	bool isFull = false;
 };
 
 class Player : public RenderElement {
@@ -28,6 +30,7 @@ public:
 	bool isActive;
 	int totalScore;
 	bool isAI;
+	bool isFull = false;
 
 	Player();
 	void Bind(class Field* _field, int idx);

@@ -42,6 +42,7 @@ private:
     std::vector<Player> players;
     MainState mainState = ES_STARTUP;
     void Tick();
+    void End(){};
 
     // UI part
     static Game* _this; // to use within static callbacks

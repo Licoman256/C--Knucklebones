@@ -38,11 +38,13 @@ void Group::DestroyDices(int diceVal) {
 		if (dice.GetValue() == diceVal) {
 			dice.Destroy();
 			destroyed = true;
+			countDices--;
 		}
 	}
 
 	if (destroyed) {
 		FallDown();
+		isFull = false;
 	}
 }
 
@@ -52,6 +54,7 @@ void Group::FallDown() {
 		auto val = dices[i].GetValue();
 		auto pow = dices[i].GetPower();
 		if (val) {
+			countDices--;
 			dices[i].Destroy();
 
 			// copy as low as possible
@@ -59,6 +62,7 @@ void Group::FallDown() {
 			toPlace.value = val;
 			toPlace.SetPower(pow);
 			toPlace.MoveToField();
+			
 			Add(toPlace);
 		}
 	}
@@ -79,6 +83,10 @@ bool Group::Add(Dice &toplace) {
 		if (!dices[i].GetValue()) {
 			toplace.MoveToField();
 			dices[i] = toplace;
+			countDices++;
+			if (countDices == countRowsPerGroup) {
+				isFull = true;
+			}
 			return true;
 		}
 	}
@@ -86,10 +94,15 @@ bool Group::Add(Dice &toplace) {
 }
 
 void Player::RecalcTotal() {
+	int fullness = 0;
 	totalScore = 0;
 	for (auto& grp : groups) {
 		grp.SetPowers();
 		totalScore += grp.GetScore();
+		fullness += grp.isFull;
+	}
+	if (fullness == countGroupsPerPlayer) {
+		isFull = true;
 	}
 }
 
