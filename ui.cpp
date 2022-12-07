@@ -3,7 +3,21 @@
 #include "stb/stb_image.h"
 #include <iostream>
 
-#define TEX1_FILE_NAME  
+
+Game* Game::_this = nullptr;
+void Game::resize_callback(GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
+	_this->Render();
+}
+
+void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		_this->pressedKey = key;
+	}
+	if (key == GLFW_KEY_ESCAPE) {
+		glfwSetWindowShouldClose(window, 1);
+	}
+}
 
 void Field::PrepareTextures() {
 	// generate names
@@ -56,3 +70,4 @@ void Field::EnableTransparancy() {
 void Field::PrepareShaders() {
 
 }
+

@@ -29,7 +29,7 @@ void Player::StartTurn() {
 
 void Player::DestroyDices(int diceVal, int grIdx) {	
 		groups[grIdx].DestroyDices(diceVal);
-		RecalcTotal();
+		RecalcScore();
 }
 
 void Group::DestroyDices(int diceVal) {
@@ -68,13 +68,13 @@ void Group::FallDown() {
 	}
 }
 
-bool Player::EndTurn(int grIdx) {
+bool Player::TryAddingToGroup(int grIdx) {
 	return Add(boxDice, groups[grIdx]);
 }
 
 bool Player::Add(Dice &toplace, Group &gr) {
 	bool added = gr.Add(toplace);
-	RecalcTotal();
+	RecalcScore();
 	return added;
 }
 
@@ -93,7 +93,7 @@ bool Group::Add(Dice &toplace) {
 	return false;
 }
 
-void Player::RecalcTotal() {
+void Player::RecalcScore() {
 	int fullness = 0;
 	totalScore = 0;
 	for (auto& grp : groups) {
@@ -151,18 +151,3 @@ void Player::Render() {
 	field->Render(*this);
 }
 
-
-void Player::FillRandomSlots() {
-	for (auto& grp : groups) {
-		grp.FillRandomSlots();
-	}
-	RecalcTotal();
-}
-
-void Group::FillRandomSlots() {
-	for (int i = 0; i < dices.size(); i++) {
-		Dice dummy;
-		dummy.Throw();
-		Add(dummy);
-	}
-}

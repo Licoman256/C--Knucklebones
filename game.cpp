@@ -2,6 +2,7 @@
 #include "stb/stb_image.h"
 #include "random.h"
 #include <iostream>
+#include <cassert>
 
 Game::Game()
 	: window(nullptr)
@@ -25,67 +26,30 @@ Game::Game()
 
 void Game::Tick() {
 	switch (mainState) {
-	case ES_STARTUP:
-		OnStartup();
-		break;
-	case ES_ANNOUNCE_ROUND:
-		break;
+	case ES_STARTUP:                OnStartup();       break;
+	case ES_ANNOUNCE_ROUND: mainState = ES_THROW_DICE;   break;
 	case ES_THROW_DICE:
+		mainState = ES_WAIT_PLAYER_INPUT;
 		break;
 
 	case ES_AI_INPUT:
-		// ai players hit random keys
-		if (players[curPlayerIdx].isAI) {
-			pressedKey = random::randomGroup(random::rng) + '1';
-		}
+		OnAISelectKeyToPress();
 		// no break
 	case ES_WAIT_PLAYER_INPUT:
-		// player turn
-		if ('1' <= pressedKey && pressedKey < '1' + countGroupsPerPlayer) {
-			int grIdx = pressedKey - '1';
-
-			auto diceVal = players[curPlayerIdx].boxDice.GetValue();
-			auto& curPlayer = players[curPlayerIdx];
-			if (curPlayer.EndTurn(grIdx)) {
-				// tell other players to remove their dices
-				for (auto& plr : players) {
-					if (!plr.isActive) {
-						plr.DestroyDices(diceVal, grIdx);
-					}
-				}
-				// end current turn
-				curPlayer.isActive = false;
-
-				for (auto& plr : players) {
-					if (plr.isFull) {
-						End();
-					}
-				}
-
-				// loop around
-				curPlayerIdx++;
-				curPlayerIdx %= countPlayers;
-
-				if (players[curPlayerIdx].isAI) {
-					mainState = ES_AI_INPUT;
-				} else {
-					mainState = ES_WAIT_PLAYER_INPUT;
-				}
-				players[curPlayerIdx].StartTurn();
-			}
-		}
-
-		//if (pressedKey == ' ') {
-		//	mainState = ES_THROW_DICE;
-		//}
+		HandlePressedKey();
 		break;
 
 	case ES_MOVE_DICE_TO_FIELD:
+		OnMoveToField();
 		break;
+
+	case ES_DESTROY_DICES:
+		OnDestroyDices();
+		break;
+
 	case ES_REODER_IN_GROUPS:
 		break;
-	case ES_DESTROY_DICES:
-		break;
+
 	case ES_UPDATE_SCORE:
 		break;
 	case ES_CHANGE_ACTIVE_PLAYER:
@@ -103,6 +67,72 @@ void Game::Tick() {
 	pressedKey = 0;
 }
 
+void Game::OnAISelectKeyToPress() {
+	assert(players[curPlayerIdx].isAI);
+
+	// for now AI players hit random keys
+	pressedKey = '1' + random::Group();
+}
+
+void Game::HandlePressedKey() {
+	// input is from any of two: player or AI
+	
+	// is it anything meaningful?
+	bool isAcceptable = ('1' <= pressedKey && pressedKey < '1' + countGroupsPerPlayer);
+	if (!isAcceptable) {
+		return;
+	}
+
+	// convert input to action
+	selectedGroupIdx = pressedKey - '1';
+
+	// try to perform the action
+	auto& curPlayer = players[curPlayerIdx];
+	if (curPlayer.TryAddingToGroup(selectedGroupIdx)) {
+		mainState = ES_MOVE_DICE_TO_FIELD;
+	}
+}
+
+void Game::OnMoveToField() {
+	// play animation
+
+	// done => next state
+	mainState = ES_DESTROY_DICES;
+}
+
+void Game::OnDestroyDices() {
+	auto diceVal = players[curPlayerIdx].boxDice.GetValue();
+	auto& curPlayer = players[curPlayerIdx];
+
+	// tell other players to remove their dices
+	for (auto& plr : players) {
+		if (!plr.isActive) {
+			plr.DestroyDices(diceVal, selectedGroupIdx);
+		}
+	}
+	// end current turn
+	curPlayer.isActive = false;
+
+	// loop around
+	curPlayerIdx++;
+	curPlayerIdx %= countPlayers;
+
+	// check for game end
+	for (auto& plr : players) {
+		if (plr.isFull) {
+			End();
+			break;
+		}
+	}
+
+	// decide next state
+	if (players[curPlayerIdx].isAI) {
+		mainState = ES_AI_INPUT;
+	} else {
+		mainState = ES_WAIT_PLAYER_INPUT;
+	}
+	players[curPlayerIdx].StartTurn();
+}
 
 void Game::OnStartup() {
 
@@ -126,28 +156,23 @@ void Game::OnStartup() {
 	field.EnableTransparancy();
 
 	// debug
-	FillRandomSlots();
-	mainState = ES_WAIT_PLAYER_INPUT;
+	#ifdef FILLSLOTS	
+		FillRandomSlots();
+	#endif
 
 	// part of game logic
 	players[0].isAI = false;
 	//players[1].isAI = false;
 	players[0].StartTurn();
+
+	// next state
+	mainState = ES_ANNOUNCE_ROUND;
 }
 
 Game::~Game() {
 	if (doneGlfwInit) {
 		glfwTerminate();
 	}
-}
-
-void Game::FillRandomSlots()
-{
-#ifdef FILLSLOTS	
-	for (auto& player : players) {
-		player.FillRandomSlots();
-	}
-#endif // FILLSLOTS
 }
 
 void Game::Render() {
@@ -177,21 +202,6 @@ void Game::FillRQueue() {
 	// 
 	// fill render queue depending on main state
 	// popup.Render();
-}
-
-Game* Game::_this = nullptr;
-void Game::resize_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-	_this->Render();
-}
-
-void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (action == GLFW_PRESS) {
-		_this->pressedKey = key;
-	}
-	if (key == GLFW_KEY_ESCAPE) {
-		 glfwSetWindowShouldClose(window, 1);
-	}
 }
 
 void Game::End() {

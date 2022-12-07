@@ -12,8 +12,8 @@ enum MainState {
             ES_AI_INPUT,
             ES_WAIT_PLAYER_INPUT,
             ES_MOVE_DICE_TO_FIELD,
-            ES_REODER_IN_GROUPS,
             ES_DESTROY_DICES,
+            ES_REODER_IN_GROUPS,
             ES_UPDATE_SCORE,
             ES_CHANGE_ACTIVE_PLAYER,
         ES_GAME_END_WIN,
@@ -42,10 +42,16 @@ private:
     void OnStartup();
 
     // game logic part
+    using Action = int;
+    Action selectedGroupIdx = 0;
     int curPlayerIdx = 0;
     std::vector<Player> players;
     MainState mainState = ES_STARTUP;
     void Tick();
+    void OnAISelectKeyToPress();
+    void HandlePressedKey();
+    void OnMoveToField();
+    void OnDestroyDices();
     void End();
 
     // UI part uses static callbacks

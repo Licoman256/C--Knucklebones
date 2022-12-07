@@ -36,8 +36,8 @@ public:
 	void Bind(class Field* _field, int idx);
 	void StartTurn();
 	void DestroyDices(int diceVal, int grIdx);
-	bool EndTurn(int grIdx);
-	void RecalcTotal();
+	bool TryAddingToGroup(int grIdx);
+	void RecalcScore();
 
 	~Player();
 	// debug

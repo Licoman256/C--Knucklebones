@@ -139,7 +139,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="random.cpp" />
-    <ClCompile Include="stb.cpp" />
+    <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dice.h" />

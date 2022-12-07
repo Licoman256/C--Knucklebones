@@ -33,7 +33,7 @@
     <ClCompile Include="dice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stb.cpp">
+    <ClCompile Include="ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="random.cpp">

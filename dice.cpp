@@ -7,7 +7,7 @@ Dice::Dice()
 	, power(1) {}
 
 void Dice::Throw() {
-	value = random::randomDice(random::rng);
+	value = random::Dice();
 	// animation of dice spinning in the box
 }
 
