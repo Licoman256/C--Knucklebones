@@ -137,7 +137,7 @@ void Field::Render(const Player& player) {
 
 void Field::Render(int score, float xCur, float yCur) {
     // count digits
-    float numOfDigits = score == 0 ? 1 : 0;
+    float numOfDigits = (score == 0 ? 1.f : 0.f);
     score = abs(score); // handle negative numbers as well
     auto tmpScore = score;
     while (tmpScore > 0) {
@@ -146,33 +146,24 @@ void Field::Render(int score, float xCur, float yCur) {
     }
 
     // process
-    Vert texStart;
-    Vert texFinish;
-    Vert rectangleStart;
-    Vert rectangleFinish;
-
+    Vert texStart{ 0.9f, 0.0f };
+    Vert texFinish{ 1.0f, 1.0f };
+    const float slotCentre = xCur + slotLen / 2;
+    Vert rectangleStart { slotCentre       + digitLen * (numOfDigits / 2 - 1),  yCur };
+    Vert rectangleFinish{ rectangleStart.x + digitLen,                          yCur - yOffset };
 
     tmpScore = score;
     for (int i = 0; i < numOfDigits; i++, tmpScore /= 10) {
         // choose texture coordinates according to char
-        int digit = tmpScore % 10;
-        if (digit == 0) {
-            texStart =  { 0.9f, 0.0f };
-            texFinish = { 1.0f, 1.0f };
-        } else {
-            texStart =  { 0.1f * digit - 0.1f, 0.0f };
-            texFinish = { 0.1f * digit,        1.0f };
-        }
-
-        // calculate coordinates
-        float slotCentre = xCur + slotLen / 2;
-
-        rectangleStart  = { slotCentre + digitLen * (numOfDigits / 2 - i - 1),           yCur};
-        rectangleFinish = { slotCentre + digitLen * (numOfDigits / 2 - i) , yCur - yOffset};
-
+        texStart.x = 0.1f * (tmpScore % 10);
+        texFinish.x = texStart.x + 0.1f;
 
         // render
         RenderTexture(rectangleStart, rectangleFinish, colors::white, E_NUMBERS, texStart, texFinish);
+
+        // move to next digit
+        rectangleStart.x -= digitLen;
+        rectangleFinish.x -= digitLen;
     }
 }
 

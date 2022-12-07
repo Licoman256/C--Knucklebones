@@ -13,8 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\Textures">
-      <UniqueIdentifier>{35146b5c-599a-4f99-9570-55f31c0e80de}</UniqueIdentifier>
+    <Filter Include="Source Files\Include">
+      <UniqueIdentifier>{e6a34834-b9c2-43a0-8e70-d4ed8a328f4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,35 +37,30 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="random.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="render.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="dice.h">
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
     <ClInclude Include="field.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
-    <ClInclude Include="dice.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="game.h">
+      <Filter>Source Files\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
     <ClInclude Include="random.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="render.h">
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
     <ClInclude Include="stb\stb_image.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="data\cat.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
   </ItemGroup>
 </Project>

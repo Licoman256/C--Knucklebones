@@ -9,6 +9,7 @@ enum MainState {
         ES_ANNOUNCE_ROUND,
             // within a round:
             ES_THROW_DICE,
+            ES_AI_INPUT,
             ES_WAIT_PLAYER_INPUT,
             ES_MOVE_DICE_TO_FIELD,
             ES_REODER_IN_GROUPS,
@@ -37,6 +38,9 @@ private:
     void Render();
     void FillRQueue();
 
+    // states
+    void OnStartup();
+
     // game logic part
     int curPlayerIdx = 0;
     std::vector<Player> players;
@@ -44,8 +48,8 @@ private:
     void Tick();
     void End();
 
-    // UI part
-    static Game* _this; // to use within static callbacks
+    // UI part uses static callbacks
+    static Game* _this;
     char pressedKey;
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void resize_callback(GLFWwindow* window, int width, int height);
