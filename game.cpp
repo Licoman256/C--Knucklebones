@@ -26,45 +26,37 @@ Game::Game()
 
 void Game::Tick() {
 	switch (mainState) {
-	case ES_STARTUP:                OnStartup();       break;
-	case ES_ANNOUNCE_ROUND: mainState = ES_THROW_DICE;   break;
-	case ES_THROW_DICE:
-		mainState = ES_WAIT_PLAYER_INPUT;
-		break;
-
-	case ES_AI_INPUT:
-		OnAISelectKeyToPress();
-		// no break
-	case ES_WAIT_PLAYER_INPUT:
-		HandlePressedKey();
-		break;
-
-	case ES_MOVE_DICE_TO_FIELD:
-		OnMoveToField();
-		break;
-
-	case ES_DESTROY_DICES:
-		OnDestroyDices();
-		break;
-
-	case ES_REODER_IN_GROUPS:
-		break;
-
-	case ES_UPDATE_SCORE:
-		break;
-	case ES_CHANGE_ACTIVE_PLAYER:
-		break;
-	case ES_GAME_END_WIN:
-		break;
-	case ES_GAME_END_DRAW:
-		break;
-	case ES_ASK_FOR_RESTART:
-		break;
-	default:
-		break;
+	case ES_STARTUP:              OnStartup();				        break;
+	case ES_ANNOUNCE_ROUND:		  AnnounceRound();					break;
+	case ES_THROW_DICE:			  OnThrowDice();					break;
+	case ES_AI_INPUT:			  OnAISelectKeyToPress();			// no break
+	case ES_WAIT_PLAYER_INPUT:	  HandlePressedKey();			    break;
+	case ES_MOVE_DICE_TO_FIELD:	  OnMoveToField();					break;
+	case ES_DESTROY_DICES:		  OnDestroyDices();					break;
+	case ES_REODER_IN_GROUPS:	  OnReorderInGroups();				break;
+	case ES_UPDATE_SCORE:		  OnUpdateScore();			        break;
+	case ES_CHANGE_ACTIVE_PLAYER: ChangeActivePlayer();				break;
+	case ES_GAME_END_WIN:											break;
+	case ES_GAME_END_DRAW:											break;
+	case ES_ASK_FOR_RESTART:										break;
+	default:														break;
 	}
 
 	pressedKey = 0;
+}
+
+void Game::OnThrowDice() {
+	// throw the dice
+	players[curPlayerIdx].StartTurn();
+
+	// play animation
+
+	// decide next state
+	if (players[curPlayerIdx].isAI) {
+		mainState = ES_AI_INPUT;
+	} else {
+		mainState = ES_WAIT_PLAYER_INPUT;
+	}
 }
 
 void Game::OnAISelectKeyToPress() {
@@ -101,37 +93,69 @@ void Game::OnMoveToField() {
 }
 
 void Game::OnDestroyDices() {
-	auto diceVal = players[curPlayerIdx].boxDice.GetValue();
-	auto& curPlayer = players[curPlayerIdx];
-
 	// tell other players to remove their dices
+	auto diceVal = players[curPlayerIdx].boxDice.GetValue();
 	for (auto& plr : players) {
 		if (!plr.isActive) {
 			plr.DestroyDices(diceVal, selectedGroupIdx);
 		}
 	}
+
+	// animation
+	mainState = ES_REODER_IN_GROUPS;
+}
+
+void Game::OnReorderInGroups() {
+	bool doneFalling = true;
+
+	// allow all players to fall down
+	for (auto& plr : players) {
+		if (!plr.isActive) {
+			doneFalling = plr.FallDown() && doneFalling;
+		}
+	}
+
+	if (doneFalling) {
+		mainState = ES_UPDATE_SCORE;
+	}
+}
+
+void Game::OnUpdateScore() {
+
+	// all players to recalculate score
+	for (auto& plr : players) {
+		if (!plr.isActive) {
+			plr.RecalcScore();
+		}
+	}
+
+	// animation
+	mainState = ES_CHANGE_ACTIVE_PLAYER;
+}
+
+void Game::ChangeActivePlayer() {
 	// end current turn
+	auto& curPlayer = players[curPlayerIdx];
 	curPlayer.isActive = false;
+
+	// check for game end
+	if (curPlayer.isFull) {
+		End();
+		return;
+	}
 
 	// loop around
 	curPlayerIdx++;
 	curPlayerIdx %= countPlayers;
 
-	// check for game end
-	for (auto& plr : players) {
-		if (plr.isFull) {
-			End();
-			break;
-		}
-	}
+	// game continues
+	mainState = ES_THROW_DICE;
+}
+	
 
-	// decide next state
-	if (players[curPlayerIdx].isAI) {
-		mainState = ES_AI_INPUT;
-	} else {
-		mainState = ES_WAIT_PLAYER_INPUT;
-	}
-	players[curPlayerIdx].StartTurn();
+void Game::AnnounceRound() {
+	// play animation
+	mainState = ES_THROW_DICE;
 }
 
 void Game::OnStartup() {
@@ -161,7 +185,7 @@ void Game::OnStartup() {
 	#endif
 
 	// part of game logic
-	players[0].isAI = false;
+	//players[0].isAI = false;
 	//players[1].isAI = false;
 	players[0].StartTurn();
 

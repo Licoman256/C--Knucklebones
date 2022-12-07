@@ -70,4 +70,3 @@ void Field::EnableTransparancy() {
 void Field::PrepareShaders() {
 
 }
-

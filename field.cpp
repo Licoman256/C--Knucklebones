@@ -227,7 +227,7 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
 
     int shift = value - 1;
     MyColor color;
-    ChangeDiceColor(dice.GetPower(), color);
+    ChangeDiceColor(dice.GetMul(), color);
     Vert start =  { xCur + leftDiceOffset,            yCur - upDiceOffset };
     Vert finish = { xCur + rightDiceOffset + slotLen, yCur - downDiceOffset - slotHeight };
     Vert txStart{ 0.0, 0.0 };

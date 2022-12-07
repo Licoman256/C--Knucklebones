@@ -1,5 +1,6 @@
 #include "game.h"
 #include "dice.h"
+#include <windows.h>
 
 Group::Group(int _rows = countRowsPerGroup)
 	: dices(_rows)
@@ -28,44 +29,51 @@ void Player::StartTurn() {
 }
 
 void Player::DestroyDices(int diceVal, int grIdx) {	
-		groups[grIdx].DestroyDices(diceVal);
-		RecalcScore();
+	groups[grIdx].DestroyDices(diceVal);
 }
 
 void Group::DestroyDices(int diceVal) {
-	bool destroyed = false;
 	for (auto& dice : dices) {
 		if (dice.GetValue() == diceVal) {
 			dice.Destroy();
-			destroyed = true;
+			isUnderAttack = true;
+			isFull = false;
 			countDices--;
 		}
-	}
-
-	if (destroyed) {
-		FallDown();
-		isFull = false;
 	}
 }
 
-void Group::FallDown() {
-	for (int i = static_cast<int>(dices.size()); --i >= 0;) {
-		// save for later
-		auto val = dices[i].GetValue();
-		auto pow = dices[i].GetPower();
-		if (val) {
-			countDices--;
-			dices[i].Destroy();
+// RET: true => done falling
+bool Player::FallDown() {
+	bool doneFalling = true;
+	for (auto& gr: groups) {
+		doneFalling = gr.FallDown() && doneFalling;
+	}
+	return doneFalling;
+}
 
-			// copy as low as possible
-			Dice toPlace;
-			toPlace.value = val;
-			toPlace.SetPower(pow);
-			toPlace.MoveToField();
-			
-			Add(toPlace);
+// RET: true => done falling
+bool Group::FallDown() {
+	if (!isUnderAttack) {
+		return true;
+	}
+	isUnderAttack = false;
+
+	// make animation smoother by slowing it down
+	Sleep(200);
+
+	// killed dices are now holes
+	// they should drift up, one step at a time
+	for (int i = static_cast<int>(dices.size()); --i > 0;) {
+		if (0 == dices[i].GetValue() && 
+			0 != dices[i-1].GetValue()) {
+			std::swap<Dice>(dices[i], dices[i-1]);
+			i--;
+			isUnderAttack = true;
 		}
 	}
+
+	return false;
 }
 
 bool Player::TryAddingToGroup(int grIdx) {
@@ -125,7 +133,7 @@ void Group::SetPowers() {
 	for (auto& dice : dices) {
 		int val = dice.GetValue();
 		if (val) {
-			dice.SetPower(vals[val - 1]);
+			dice.SetMul(vals[val - 1]);
 		}
 	}
 }
@@ -133,7 +141,7 @@ void Group::SetPowers() {
 int Group::GetScore() const {
 	int total = 0;
 	for (auto& dice : dices) {
-		total += dice.GetValue() * dice.GetPower();
+		total += dice.GetValue() * dice.GetMul();
 	}
 	return total;
 	

@@ -2,18 +2,19 @@
 class Dice {
 public:
 	Dice();
-	void MoveToField();
+	void Destroy();
+	~Dice();
 
 	void Throw();
-	int GetValue() const;
+	void MoveToField();
 
-	int GetPower() const;
-	void SetPower(int pw);
-	void Destroy();
-	~Dice();	
-	int value;
+	int  GetValue() const;
+	void SetValue(int v) { value = v; }
+	int  GetMul() const;
+	void SetMul(int pw);
+
 private:
-	
 	bool isOnField;
-	int power;
+	int value;
+	int multiplier;
 };

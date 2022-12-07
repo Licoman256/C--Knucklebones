@@ -4,7 +4,7 @@
 Dice::Dice()
 	: value(0)
 	, isOnField(false)
-	, power(1) {}
+	, multiplier(1) {}
 
 void Dice::Throw() {
 	value = random::Dice();
@@ -15,12 +15,12 @@ int Dice::GetValue() const {
 	return value;
 }
 
-void Dice::SetPower(int pw) {
-	 power = pw;
+void Dice::SetMul(int pw) {
+	 multiplier = pw;
 }
 
-int Dice::GetPower() const {
-	return power;
+int Dice::GetMul() const {
+	return multiplier;
 }
 
 void Dice::MoveToField() {
@@ -30,7 +30,7 @@ void Dice::MoveToField() {
 void Dice::Destroy() {
 	isOnField = false;
 	value = 0;
-	power = 1;
+	multiplier = 1;
 }
 
 Dice::~Dice() {}

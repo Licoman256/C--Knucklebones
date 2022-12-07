@@ -5,7 +5,7 @@
 #include "dice.h"
 
 const int countGroupsPerPlayer = 4;
-const int countRowsPerGroup = 3;
+const int countRowsPerGroup = 6;
 
 class Group {
 public:
@@ -13,7 +13,7 @@ public:
 	void FillRandomSlots();
 	bool Add(Dice &toplace);
 	void DestroyDices(int diceVal);
-	void FallDown();
+	bool FallDown();
 	int GetScore() const;
 	void SetPowers();
 	~Group();
@@ -21,6 +21,7 @@ public:
 	std::vector<Dice> dices;
 	int countDices = 0;
 	bool isFull = false;
+	bool isUnderAttack = false;
 };
 
 class Player : public RenderElement {
@@ -36,6 +37,7 @@ public:
 	void Bind(class Field* _field, int idx);
 	void StartTurn();
 	void DestroyDices(int diceVal, int grIdx);
+	bool FallDown();
 	bool TryAddingToGroup(int grIdx);
 	void RecalcScore();
 

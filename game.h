@@ -48,10 +48,15 @@ private:
     std::vector<Player> players;
     MainState mainState = ES_STARTUP;
     void Tick();
+    void OnThrowDice();
+    void AnnounceRound();
     void OnAISelectKeyToPress();
     void HandlePressedKey();
     void OnMoveToField();
     void OnDestroyDices();
+    void OnUpdateScore();
+    void ChangeActivePlayer();
+    void OnReorderInGroups();
     void End();
 
     // UI part uses static callbacks

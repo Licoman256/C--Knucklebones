@@ -1,5 +1,6 @@
 #include "game.h"
 #include <iostream>
+#include <windows.h>
 
 int main(void) {
     Game game;
@@ -17,6 +18,8 @@ void Game::RunMainLoop() {
 		Render();
 		glfwPollEvents();
 		Tick();
+
+		// debug
+		//Sleep(50);
 	}
 }
-
