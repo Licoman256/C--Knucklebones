@@ -34,8 +34,12 @@ namespace colors {
                                   };
 };
 
+struct Vert {
+    float x; 
+    float y;
+};
+
 enum {
-    
     E_BACKGROUND = 0,
     E_DICE_1,
     E_DICE_2,
@@ -46,20 +50,8 @@ enum {
     E_FIELD,
     E_SLOT,
     E_NUMBERS,
+    E_LIGHTNING,
     TEXTURE_LAST
-};
-
-static char const* textFileNames[] = {
-    "data/background.png",
-    "data/dice1.png",
-    "data/dice2.png",
-    "data/dice3.png",
-    "data/dice4.png",
-    "data/dice5.png",
-    "data/dice6.png",
-    "data/field.png",
-    "data/slot.png",
-    "data/numbers.png"
 };
 
 const GLsizei COUNT_TEX_NAMES = TEXTURE_LAST;

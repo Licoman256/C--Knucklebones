@@ -13,6 +13,7 @@ public:
 	int  GetMul() const;
 	void SetMul(int pw);
 
+	float fallProgress = 1;
 private:
 	bool isOnField;
 	int value;

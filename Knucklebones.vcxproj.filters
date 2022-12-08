@@ -39,6 +39,9 @@
     <ClCompile Include="random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightArc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dice.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="stb\stb_image.h">
       <Filter>Source Files\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="LightArc.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

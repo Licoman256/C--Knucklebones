@@ -5,7 +5,7 @@
 #include "dice.h"
 
 const int countGroupsPerPlayer = 4;
-const int countRowsPerGroup = 6;
+const int countRowsPerGroup = 3;
 
 class Group {
 public:

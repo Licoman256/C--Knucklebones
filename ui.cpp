@@ -19,6 +19,20 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 	}
 }
 
+static char const* textFileNames[TEXTURE_LAST] = {
+	"data/background.png",
+	"data/dice1.png",
+	"data/dice2.png",
+	"data/dice3.png",
+	"data/dice4.png",
+	"data/dice5.png",
+	"data/dice6.png",
+	"data/field.png",
+	"data/slot.png",
+	"data/numbers.png",
+	"data/lightning.png"
+};
+
 void Field::PrepareTextures() {
 	// generate names
 	glGenTextures(COUNT_TEX_NAMES, textureNames);

@@ -220,16 +220,12 @@ void Field::Render(const Dice &dice, float xCur, float yCur) {
         rightDiceOffset = 0;   
     }
 
-    float xStart = xCur + leftDiceOffset;
-    float yStart = yCur - upDiceOffset;
-    float xFinish = xCur + rightDiceOffset + slotLen;
-    float yFinish = yCur - downDiceOffset - slotHeight;
-
     int shift = value - 1;
     MyColor color;
     ChangeDiceColor(dice.GetMul(), color);
-    Vert start =  { xCur + leftDiceOffset,            yCur - upDiceOffset };
-    Vert finish = { xCur + rightDiceOffset + slotLen, yCur - downDiceOffset - slotHeight };
+    float aaa = (1 - diceSlotOccupation) / 2;
+    Vert start =  { xCur + leftDiceOffset + slotLen * dimCoef * aaa,  yCur - upDiceOffset - slotHeight * aaa };
+    Vert finish = { xCur + rightDiceOffset + slotLen * (1 - aaa) , yCur - downDiceOffset - slotHeight * dimCoef * (1 - aaa) };
     Vert txStart{ 0.0, 0.0 };
     Vert txFinish{ 1.0, 1.0 };
     RenderTexture(start, finish, color, E_DICE_1 + shift, txStart, txFinish);

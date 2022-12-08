@@ -3,6 +3,7 @@
 #include "random.h"
 #include <iostream>
 #include <cassert>
+#include <chrono>
 
 Game::Game()
 	: window(nullptr)
@@ -24,7 +25,30 @@ Game::Game()
 	return;
 }
 
+std::chrono::steady_clock::duration timeChronoStart;
+typedef long long unsigned int u64;
+
+void ChronoStart() {
+	timeChronoStart = std::chrono::high_resolution_clock::now().time_since_epoch();
+}
+
+u64 ChronoRound() {
+	// calc delta from the previous round
+	auto finish = std::chrono::high_resolution_clock::now().time_since_epoch();
+	auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(finish - timeChronoStart).count();
+
+	// start new round
+	timeChronoStart = finish;
+
+	return delta;
+}
+
+
 void Game::Tick() {
+	// how much time is spent
+	float deltaTime = ChronoRound() / 1000.f;
+
+	// do FSM
 	switch (mainState) {
 	case ES_STARTUP:              OnStartup();				        break;
 	case ES_ANNOUNCE_ROUND:		  AnnounceRound();					break;
@@ -81,12 +105,17 @@ void Game::HandlePressedKey() {
 	// try to perform the action
 	auto& curPlayer = players[curPlayerIdx];
 	if (curPlayer.TryAddingToGroup(selectedGroupIdx)) {
+		// calculate arc
+		//field.arc.CalcNew();
+
+		// proceed to draw and animate the arc
 		mainState = ES_MOVE_DICE_TO_FIELD;
 	}
 }
 
 void Game::OnMoveToField() {
 	// play animation
+	//field.arc.Animate();
 
 	// done => next state
 	mainState = ES_DESTROY_DICES;
@@ -159,6 +188,7 @@ void Game::AnnounceRound() {
 }
 
 void Game::OnStartup() {
+	ChronoStart();
 
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
@@ -185,7 +215,7 @@ void Game::OnStartup() {
 	#endif
 
 	// part of game logic
-	//players[0].isAI = false;
+	players[0].isAI = false;
 	//players[1].isAI = false;
 	players[0].StartTurn();
 

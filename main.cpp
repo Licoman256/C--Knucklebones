@@ -1,6 +1,6 @@
 #include "game.h"
 #include <iostream>
-#include <windows.h>
+#include "random.h"
 
 int main(void) {
     Game game;

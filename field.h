@@ -1,6 +1,7 @@
 #pragma once
 
 #include "player.h"
+#include "LightArc.h"
 
 static const int countPlayers = 3;
 
@@ -27,6 +28,8 @@ protected:
     const float digitLen = xOffset / 2;
 
     const float xBoxOrigin{ xSlotOrigin - (slotLen + 1.5f * xOffset) };
+
+    const float diceSlotOccupation = 0.75;
 };
 
 class Field : public ScreenOffsetsAndSizes {
@@ -42,6 +45,8 @@ public:
     void PrepareShaders();
     void EnableTransparancy();
     void PrepareFont();
+
+    LightArc arc;
 
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
@@ -69,8 +74,5 @@ private:
     void ChangeTexture(int idxTx);
 
     bool LoadTexture(int idxTx, char const* filename);
-    struct Vert {
-        float x; float y;
-    };
     void RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish);
 };

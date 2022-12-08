@@ -1,6 +1,5 @@
 #include "game.h"
 #include "dice.h"
-#include <windows.h>
 
 Group::Group(int _rows = countRowsPerGroup)
 	: dices(_rows)
@@ -60,7 +59,7 @@ bool Group::FallDown() {
 	isUnderAttack = false;
 
 	// make animation smoother by slowing it down
-	Sleep(200);
+	//Sleep(200);
 
 	// killed dices are now holes
 	// they should drift up, one step at a time
