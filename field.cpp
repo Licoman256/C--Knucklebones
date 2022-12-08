@@ -200,33 +200,33 @@ void Field::ChangeDiceColor(int pow, MyColor& color) {
     color = colors::dicePowers[pow - 1];
 }
 
-void Field::Render(const Dice &dice, float xCur, float yCur) {
+void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
     auto value = dice.GetValue();
     if (!value) {
         return;
     }
+    int digit = value - 1;
 
-    float leftDiceOffset  = (slotLen    - slotHeight * dimCoef) / 2;
-    float rightDiceOffset = (slotLen    + slotHeight * dimCoef) / 2 - slotLen;
-    float upDiceOffset    = (slotHeight - slotLen    / dimCoef) / 2;
-    float downDiceOffset  = (slotHeight + slotLen    / dimCoef) / 2 - slotHeight;
+    // shrink the slot
+    float reducedSlotLen    = slotLen    * diceSlotOccupation;
+    float reducedSlotHeight = slotHeight * diceSlotOccupation;
+    float reducedSlotStartX = slotStartX + slotLen    * (1 - diceSlotOccupation) / 2;
+    float reducedSlotStartY = slotStartY - slotHeight * (1 - diceSlotOccupation) / 2;
 
-    if (slotLen > slotHeight * dimCoef) {
-        upDiceOffset   = 0;
-        downDiceOffset = 0;
-
+    // select where an offset is
+    float diceOffsetX  = (reducedSlotLen - reducedSlotHeight * dimCoef) / 2;
+    float diceOffsetY  = (reducedSlotHeight - reducedSlotLen / dimCoef) / 2;
+    if (reducedSlotLen > reducedSlotHeight * dimCoef) {
+        diceOffsetY   = 0;
     } else {
-        leftDiceOffset  = 0;
-        rightDiceOffset = 0;   
+        diceOffsetX  = 0;
     }
 
-    int shift = value - 1;
     MyColor color;
     ChangeDiceColor(dice.GetMul(), color);
-    float aaa = (1 - diceSlotOccupation) / 2;
-    Vert start =  { xCur + leftDiceOffset + slotLen * dimCoef * aaa,  yCur - upDiceOffset - slotHeight * aaa };
-    Vert finish = { xCur + rightDiceOffset + slotLen * (1 - aaa) , yCur - downDiceOffset - slotHeight * dimCoef * (1 - aaa) };
+    Vert start =  { reducedSlotStartX + diceOffsetX,                  reducedSlotStartY - diceOffsetY};
+    Vert finish = { reducedSlotStartX - diceOffsetX + reducedSlotLen, reducedSlotStartY + diceOffsetY - reducedSlotHeight };
     Vert txStart{ 0.0, 0.0 };
     Vert txFinish{ 1.0, 1.0 };
-    RenderTexture(start, finish, color, E_DICE_1 + shift, txStart, txFinish);
+    RenderTexture(start, finish, color, E_DICE_1 + digit, txStart, txFinish);
 }

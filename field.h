@@ -29,7 +29,7 @@ protected:
 
     const float xBoxOrigin{ xSlotOrigin - (slotLen + 1.5f * xOffset) };
 
-    const float diceSlotOccupation = 0.75;
+    const float diceSlotOccupation = 0.8f;
 };
 
 class Field : public ScreenOffsetsAndSizes {
