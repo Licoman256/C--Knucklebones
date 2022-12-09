@@ -6,7 +6,7 @@ class LightArc : public RenderElement {
 	class Field* field = nullptr;
 public:
 	void Bind(Field* _field);
-	static const int COUNT_QUADS = 20;
+	static const int COUNT_QUADS = 40;
 	void Prepare(Vert start, Vert end);
 	void Animate(float deltaTime);
 

@@ -115,9 +115,14 @@ void Game::HandlePressedKey() {
 
 void Game::OnMoveToField() {
 	// play animation
+	static int timerFrames = 0;
 	field.arc.Animate(deltaTime);
+	timerFrames++;
 	// done => next state
-	// @_@ mainState = ES_DESTROY_DICES;
+	if (timerFrames >= 30) {
+		mainState = ES_DESTROY_DICES;
+		timerFrames = 0;
+	}
 }
 
 void Game::OnDestroyDices() {
@@ -215,8 +220,7 @@ void Game::OnStartup() {
 	#endif
 
 	// part of game logic
-	players[0].isAI = false;
-	//players[1].isAI = false;
+	//players[0].isAI = false;
 	players[0].StartTurn();
 
 	// next state

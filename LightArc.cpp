@@ -38,8 +38,28 @@ void Field::PrepareArc(Player& player) {
 
 void LightArc::Prepare(Vert start, Vert end) {
 	static float thickness = 0.15f;
+	float r = 0.1f;
+	float a = (2 * start.y + end.y - 4 * r) / (COUNT_QUADS * COUNT_QUADS);
+	float b = (4 * r - 3 * start.y) / (COUNT_QUADS);
+	float c = start.y;
+	float deltaX = (end.x - start.x) / COUNT_QUADS;
+	float deltaY = (end.y - start.y) / COUNT_QUADS;
 
-	// start point
+	upSideCoords[0] = downSideCoords[0] = start;
+	//downSideCoords[0].y -= thickness * 0.1f;
+	for (int i = 1; i < COUNT_QUADS; i++) {
+		//float stepY = deltaY * i;
+		upSideCoords[i] =   { upSideCoords[i - 1].x + deltaX, (a * i * i + b * i + c)};
+		downSideCoords[i] = { upSideCoords[i].x, upSideCoords[i].y - thickness};
+
+		tex[i] = tex[i - 1] + 0.1f;
+	}
+
+	upSideCoords[COUNT_QUADS - 1] = downSideCoords[COUNT_QUADS - 1] = end;
+	//downSideCoords[COUNT_QUADS - 1].y -= thickness;
+}
+
+/*/ start point
 	upSideCoords  [0] = downSideCoords[0] = start;
 	downSideCoords[0].y -= thickness * 0.1f;
 	tex[0] = 0.0f;
@@ -57,8 +77,7 @@ void LightArc::Prepare(Vert start, Vert end) {
 	// end point
 	upSideCoords  [COUNT_QUADS - 1] = downSideCoords[COUNT_QUADS - 1] = end;
 	downSideCoords[COUNT_QUADS - 1].y -= thickness * 0.1f;
-	//downSideCoords[COUNT_QUADS - 1] = { end.x, end.y - thickness };
-}
+	//downSideCoords[COUNT_QUADS - 1] = { end.x, end.y - thickness };*/
 
 void LightArc::Animate(float deltaTime) {
 	static float speed = 1.f;
