@@ -76,6 +76,7 @@ bool Group::FallDown() {
 }
 
 bool Player::TryAddingToGroup(int grIdx) {
+	addingTo = grIdx;
 	return Add(boxDice, groups[grIdx]);
 }
 
@@ -90,6 +91,7 @@ bool Group::Add(Dice &toplace) {
 		if (!dices[i].GetValue()) {
 			toplace.MoveToField();
 			dices[i] = toplace;
+			addingTo = i;
 			countDices++;
 			if (countDices == countRowsPerGroup) {
 				isFull = true;
@@ -157,4 +159,3 @@ void Player::Bind(Field* _field, int idx) 	{
 void Player::Render() {
 	field->Render(*this);
 }
-

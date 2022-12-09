@@ -3,6 +3,7 @@
 
 Field::Field() {
     ClearLayout();
+    arc.Bind(this);
 }
 Field::~Field() {
     // may call ClearLayout();

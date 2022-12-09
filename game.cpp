@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cassert>
 #include <chrono>
+//#include <Windows.h>
 
 Game::Game()
 	: window(nullptr)
@@ -46,12 +47,12 @@ u64 ChronoRound() {
 
 void Game::Tick() {
 	// how much time is spent
-	float deltaTime = ChronoRound() / 1000.f;
+	deltaTime = ChronoRound() / 1000.f;
 
 	// do FSM
 	switch (mainState) {
 	case ES_STARTUP:              OnStartup();				        break;
-	case ES_ANNOUNCE_ROUND:		  AnnounceRound();					break;
+ 	case ES_ANNOUNCE_ROUND:		  AnnounceRound();					break;
 	case ES_THROW_DICE:			  OnThrowDice();					break;
 	case ES_AI_INPUT:			  OnAISelectKeyToPress();			// no break
 	case ES_WAIT_PLAYER_INPUT:	  HandlePressedKey();			    break;
@@ -105,8 +106,7 @@ void Game::HandlePressedKey() {
 	// try to perform the action
 	auto& curPlayer = players[curPlayerIdx];
 	if (curPlayer.TryAddingToGroup(selectedGroupIdx)) {
-		// calculate arc
-		//field.arc.CalcNew();
+		field.PrepareArc(curPlayer);
 
 		// proceed to draw and animate the arc
 		mainState = ES_MOVE_DICE_TO_FIELD;
@@ -115,10 +115,9 @@ void Game::HandlePressedKey() {
 
 void Game::OnMoveToField() {
 	// play animation
-	//field.arc.Animate();
-
+	field.arc.Animate(deltaTime);
 	// done => next state
-	mainState = ES_DESTROY_DICES;
+	// @_@ mainState = ES_DESTROY_DICES;
 }
 
 void Game::OnDestroyDices() {
@@ -131,6 +130,7 @@ void Game::OnDestroyDices() {
 	}
 
 	// animation
+
 	mainState = ES_REODER_IN_GROUPS;
 }
 
@@ -253,6 +253,9 @@ void Game::FillRQueue() {
 		}
 	}
 
+	if (mainState == ES_MOVE_DICE_TO_FIELD) {
+		rQueue.push_back(&field.arc);
+	}
 	// 
 	// fill render queue depending on main state
 	// popup.Render();

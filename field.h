@@ -32,11 +32,18 @@ protected:
     const float diceSlotOccupation = 0.8f;
 };
 
-class Field : public ScreenOffsetsAndSizes {
+class Texturer {
+public:
+    int dummy;
+
+};
+
+class Field : public ScreenOffsetsAndSizes, public Texturer {
 public:
     Field();
     ~Field();
     void AddToLayout(int idx, const Player &player);
+   
     void RenderCommon(GLFWwindow* window);
     void Render(const Player& player);
 
@@ -47,9 +54,12 @@ public:
     void PrepareFont();
 
     LightArc arc;
+    void PrepareArc(Player& player);
 
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
+    void ChangeTexture(int idxTx);
+    void RenderTexture(Vert& rectangleStart, Vert& rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish);
 private:
     struct Layout {
         const void* key;
@@ -71,8 +81,6 @@ private:
 
     bool ChangeColor(const Dice& dice); // not used
     void ChangeDiceColor(int pow, MyColor& color);
-    void ChangeTexture(int idxTx);
 
     bool LoadTexture(int idxTx, char const* filename);
-    void RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish);
 };

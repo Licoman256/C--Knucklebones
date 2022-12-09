@@ -19,7 +19,9 @@ public:
 	~Group();
 	
 	std::vector<Dice> dices;
+	int addingTo = -1;
 	int countDices = 0;
+
 	bool isFull = false;
 	bool isUnderAttack = false;
 };
@@ -28,10 +30,14 @@ class Player : public RenderElement {
 public:
 	std::vector<Group> groups;
 	Dice boxDice;
+
 	bool isActive;
 	int totalScore;
+
 	bool isAI;
 	bool isFull = false;
+
+	int addingTo = 0;
 
 	Player();
 	void Bind(class Field* _field, int idx);

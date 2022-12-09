@@ -47,6 +47,8 @@ private:
     int curPlayerIdx = 0;
     std::vector<Player> players;
     MainState mainState = ES_STARTUP;
+    float deltaTime = 0.f;
+
     void Tick();
     void OnThrowDice();
     void AnnounceRound();
