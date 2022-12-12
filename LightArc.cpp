@@ -1,5 +1,6 @@
 #include "LightArc.h"
 #include "field.h"
+#include "random.h"
 
 void LightArc::Bind(Field* _field) {
 	field = _field;
@@ -12,8 +13,8 @@ void LightArc::Render() {
 	field->ChangeTexture(E_LIGHTNING);
 	glBegin(GL_QUAD_STRIP);
 		for (int i = 0; i < COUNT_QUADS; i++) {
-			glTexCoord2f(tex[i], 0); glVertex2f(downSideCoords[i].x, downSideCoords[i].y);
-			glTexCoord2f(tex[i], 1); glVertex2f(upSideCoords  [i].x, upSideCoords  [i].y);
+			glTexCoord2f(tex[i], 0); glVertex2f(dnSide[i].x, dnSide[i].y);
+			glTexCoord2f(tex[i], 1); glVertex2f(upSide  [i].x, upSide  [i].y);
 		}
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
@@ -37,50 +38,93 @@ void Field::PrepareArc(Player& player) {
 }
 
 void LightArc::Prepare(Vert start, Vert end) {
-	static float thickness = 0.15f;
-	float r = 0.1f;
-	float a = (2 * start.y + end.y - 4 * r) / (COUNT_QUADS * COUNT_QUADS);
-	float b = (4 * r - 3 * start.y) / (COUNT_QUADS);
-	float c = start.y;
-	float deltaX = (end.x - start.x) / COUNT_QUADS;
-	float deltaY = (end.y - start.y) / COUNT_QUADS;
+	tex[0] = 0.0f;
+	Vert target{ (end.x - start.x) ,
+				 (end.y - start.y) };
 
-	upSideCoords[0] = downSideCoords[0] = start;
-	//downSideCoords[0].y -= thickness * 0.1f;
-	for (int i = 1; i < COUNT_QUADS; i++) {
-		//float stepY = deltaY * i;
-		upSideCoords[i] =   { upSideCoords[i - 1].x + deltaX, (a * i * i + b * i + c)};
-		downSideCoords[i] = { upSideCoords[i].x, upSideCoords[i].y - thickness};
-
-		tex[i] = tex[i - 1] + 0.1f;
+	thickness = target.x / 5;
+	gravity = sqrtf(thickness) / 150;
+	
+	// flip gravity for players that are high up
+	if (start.y > 0) {
+		gravity *= -1;
 	}
 
-	upSideCoords[COUNT_QUADS - 1] = downSideCoords[COUNT_QUADS - 1] = end;
-	//downSideCoords[COUNT_QUADS - 1].y -= thickness;
+	// random gravity for middle player
+	if (abs(start.y) < 0.1f && random::Bool()) {
+		gravity *= -1;
+	}
+
+	// calc initial velocity 
+	// -- we will simulate one sec in each loop iteration
+	Vert velocity;
+	float travelTime = (COUNT_QUADS - 1);
+	velocity.x = target.x / travelTime;
+	float verticalShift = gravity * 0.5f * travelTime * travelTime;
+	velocity.y = (target.y + verticalShift) / travelTime;
+
+	// current point gonna travel from start to end
+	Vert curPoint = start;
+	FillTrajectotyPoint(0, velocity, velocity, curPoint);
+	for (int i = 1; i < COUNT_QUADS; i++) {
+		// step by velocity 
+		curPoint.x += velocity.x * 1;
+		curPoint.y += velocity.y * 1;
+
+		// change velocity
+		Vert nextVel{
+			velocity.x,
+			velocity.y - gravity * 1
+		};
+
+		// fill quad sides
+		FillTrajectotyPoint(i, nextVel, velocity, curPoint);
+
+		// iterate
+		velocity = nextVel;
+
+		// tex coords
+		tex[i] = tex[i - 1] + 0.1f;
+	}
 }
 
-/*/ start point
-	upSideCoords  [0] = downSideCoords[0] = start;
-	downSideCoords[0].y -= thickness * 0.1f;
-	tex[0] = 0.0f;
+void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& velocity, const Vert& nextPoint) {
+	// calc ortho dir
+	Vert ortho{
+		nextVel.y + velocity.y,
+		-nextVel.x - velocity.x
+	};
 
-	// middle points
-	float stepX = (end.x - start.x) / COUNT_QUADS;
-	float stepY = 0.05f;
-	for (int i = 1; i < COUNT_QUADS; i++) {
-		upSideCoords[i] = { upSideCoords[i - 1].x + stepX, start.y + stepY * (i * (i - (COUNT_QUADS - 1))) / 4 };
-		downSideCoords[i] = { upSideCoords[i].x, upSideCoords[i].y - thickness };
-
-		tex[i] = tex[i - 1] + 0.1f;
+	// narrow at the start and at the end
+	float narrow = 1.f;
+	auto countTail = COUNT_QUADS / 3;
+	auto revIdx = COUNT_QUADS - i;
+	if (i < countTail) {
+		narrow = 0.1f + 0.9f * i / countTail;
+	} else if (revIdx < countTail) {
+		narrow = 0.1f + 0.9f * revIdx / countTail;
 	}
 
-	// end point
-	upSideCoords  [COUNT_QUADS - 1] = downSideCoords[COUNT_QUADS - 1] = end;
-	downSideCoords[COUNT_QUADS - 1].y -= thickness * 0.1f;
-	//downSideCoords[COUNT_QUADS - 1] = { end.x, end.y - thickness };*/
+	// calc side step
+	float coeff = thickness * narrow * 0.5f / ortho.Len();
+	Vert sideStep{
+		ortho.x * coeff,
+		ortho.y * coeff
+	};
+
+	// fill quad sides
+	upSide[i] = {
+		nextPoint.x + sideStep.x,
+		nextPoint.y + sideStep.y
+	};
+	dnSide[i] = {
+		nextPoint.x - sideStep.x,
+		nextPoint.y - sideStep.y
+	};
+}
 
 void LightArc::Animate(float deltaTime) {
-	static float speed = 1.f;
+	static float speed = 1.5f;
 	float deltaTex = speed * deltaTime;
 
 	for (int i = 0; i < COUNT_QUADS; i++) {

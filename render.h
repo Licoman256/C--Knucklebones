@@ -37,6 +37,7 @@ namespace colors {
 struct Vert {
     float x; 
     float y;
+    float Len(void);
 };
 
 enum {

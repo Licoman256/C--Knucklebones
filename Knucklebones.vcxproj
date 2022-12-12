@@ -142,6 +142,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="random.cpp" />
+    <ClCompile Include="render.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>

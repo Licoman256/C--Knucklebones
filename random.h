@@ -3,4 +3,5 @@
 namespace random {
 	int Group();
 	int Dice();
+	int Bool();
 }

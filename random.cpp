@@ -7,6 +7,8 @@ namespace random {
 	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> randomDice(1, 6);
 	std::uniform_int_distribution<int> randomGroup(0, countGroupsPerPlayer);
+	std::uniform_int_distribution<int> randomBool(0, 1);
+
 
 	// getters
 	int Group() {
@@ -15,6 +17,13 @@ namespace random {
 	int Dice() {
 		return randomDice(rng);
 	}
+	int Bool() {
+		return randomBool(rng);
+	}
+}
+
+float Vert::Len(void) {
+	return sqrtf( x*x + y*y );
 }
 
 // -------------------------

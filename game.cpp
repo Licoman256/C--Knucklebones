@@ -123,6 +123,9 @@ void Game::OnMoveToField() {
 		mainState = ES_DESTROY_DICES;
 		timerFrames = 0;
 	}
+	//if (players[curPlayerIdx].isAI) {
+	//	mainState = ES_DESTROY_DICES;
+	//}
 }
 
 void Game::OnDestroyDices() {
@@ -221,6 +224,7 @@ void Game::OnStartup() {
 
 	// part of game logic
 	//players[0].isAI = false;
+	//players[2].isAI = false;
 	players[0].StartTurn();
 
 	// next state
