@@ -7,6 +7,7 @@ public:
 
 	void Throw();
 	void MoveToField();
+	bool CheckIfOnField() const;
 
 	int  GetValue() const;
 	void SetValue(int v) { value = v; }

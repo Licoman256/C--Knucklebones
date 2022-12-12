@@ -119,10 +119,13 @@ void Game::OnMoveToField() {
 	field.arc.Animate(deltaTime);
 	timerFrames++;
 	// done => next state
-	if (timerFrames >= 30) {
+	if (timerFrames >= 60) {
 		mainState = ES_DESTROY_DICES;
+		players[curPlayerIdx].MoveToField();
+		players[curPlayerIdx].RecalcScore();
 		timerFrames = 0;
 	}
+
 	//if (players[curPlayerIdx].isAI) {
 	//	mainState = ES_DESTROY_DICES;
 	//}

@@ -27,6 +27,10 @@ void Dice::MoveToField() {
 	isOnField = true;
 }
 
+bool Dice::CheckIfOnField() const {
+	return isOnField;
+}
+
 void Dice::Destroy() {
 	isOnField = false;
 	value = 0;

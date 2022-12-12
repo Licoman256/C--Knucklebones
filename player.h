@@ -12,8 +12,10 @@ public:
 	Group(int _rows);
 	void FillRandomSlots();
 	bool Add(Dice &toplace);
+	void MoveToField();
 	void DestroyDices(int diceVal);
 	bool FallDown();
+	void SetScore();
 	int GetScore() const;
 	void SetPowers();
 	~Group();
@@ -21,6 +23,7 @@ public:
 	std::vector<Dice> dices;
 	int addingTo = -1;
 	int countDices = 0;
+	int score = 0;
 
 	bool isFull = false;
 	bool isUnderAttack = false;
@@ -45,6 +48,7 @@ public:
 	void DestroyDices(int diceVal, int grIdx);
 	bool FallDown();
 	bool TryAddingToGroup(int grIdx);
+	void MoveToField();
 	void RecalcScore();
 
 	~Player();

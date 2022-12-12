@@ -82,14 +82,12 @@ bool Player::TryAddingToGroup(int grIdx) {
 
 bool Player::Add(Dice &toplace, Group &gr) {
 	bool added = gr.Add(toplace);
-	RecalcScore();
 	return added;
 }
 
 bool Group::Add(Dice &toplace) {
 	for (int i = static_cast<int>(dices.size()); --i >= 0;) {
 		if (!dices[i].GetValue()) {
-			toplace.MoveToField();
 			dices[i] = toplace;
 			addingTo = i;
 			countDices++;
@@ -102,11 +100,20 @@ bool Group::Add(Dice &toplace) {
 	return false;
 }
 
+void Player::MoveToField() {
+	groups[addingTo].MoveToField();
+}
+
+void Group::MoveToField() {
+	dices[addingTo].MoveToField();
+}
+
 void Player::RecalcScore() {
 	int fullness = 0;
 	totalScore = 0;
 	for (auto& grp : groups) {
 		grp.SetPowers();
+		grp.SetScore();
 		totalScore += grp.GetScore();
 		fullness += grp.isFull;
 	}
@@ -139,13 +146,15 @@ void Group::SetPowers() {
 	}
 }
 
-int Group::GetScore() const {
-	int total = 0;
+int Group::GetScore() const {	
+	return score;	
+}
+
+void Group::SetScore() {
+	score= 0;
 	for (auto& dice : dices) {
-		total += dice.GetValue() * dice.GetMul();
+		score += dice.GetValue() * dice.GetMul();
 	}
-	return total;
-	
 }
 
 void Player::Bind(Field* _field, int idx) 	{

@@ -129,7 +129,11 @@ void Field::Render(const Player& player) {
             RenderSlot(lay.color, xCur, yCur);
 
             // render dice over the slot
-            Render(player.groups[i].dices[j], xCur, yCur);
+            auto& dice = player.groups[i].dices[j];
+            if (dice.CheckIfOnField()) {
+                Render(dice, xCur, yCur);
+            }
+            
         }
         // render group score
         Render(player.groups[i].GetScore(), xCur, yCur);
