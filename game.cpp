@@ -117,12 +117,14 @@ void Game::OnMoveToField() {
 	// play animation
 	static int timerFrames = 0;
 	field.arc.Animate(deltaTime);
+	field.movingDice.Animate(deltaTime);
 	timerFrames++;
 	// done => next state
-	if (timerFrames >= 60) {
+	if (timerFrames >= 40) {
 		mainState = ES_DESTROY_DICES;
 		players[curPlayerIdx].MoveToField();
 		players[curPlayerIdx].RecalcScore();
+		field.movingDice.ResetTime();
 		timerFrames = 0;
 	}
 
@@ -266,6 +268,7 @@ void Game::FillRQueue() {
 
 	if (mainState == ES_MOVE_DICE_TO_FIELD) {
 		rQueue.push_back(&field.arc);
+		rQueue.push_back(&field.movingDice);
 	}
 	// 
 	// fill render queue depending on main state

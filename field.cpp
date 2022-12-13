@@ -4,6 +4,7 @@
 Field::Field() {
     ClearLayout();
     arc.Bind(this);
+    movingDice.Bind(this, &arc);
 }
 Field::~Field() {
     // may call ClearLayout();

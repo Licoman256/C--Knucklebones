@@ -56,6 +56,8 @@ public:
     LightArc arc;
     void PrepareArc(Player& player);
 
+    MovingDice movingDice;
+
     static const int WINDOW_WIDTH = 1200;
     static const int WINDOW_HEIGHT = 800;
     void ChangeTexture(int idxTx);

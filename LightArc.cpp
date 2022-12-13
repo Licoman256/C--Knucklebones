@@ -43,7 +43,7 @@ void LightArc::Prepare(Vert start, Vert end) {
 				 (end.y - start.y) };
 
 	thickness = target.x / 5;
-	gravity = sqrtf(thickness) / 150;
+	gravity = sqrtf(thickness) / 300;
 	
 	// flip gravity for players that are high up
 	if (start.y > 0) {
@@ -124,20 +124,9 @@ void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& veloc
 }
 
 void LightArc::Animate(float deltaTime) {
-	static float speed = 1.5f;
 	float deltaTex = speed * deltaTime;
 
 	for (int i = 0; i < COUNT_QUADS; i++) {
 		tex[i] -= deltaTex;
 	}
 }
-
-/*
-	Vert txStart{ 0.0, 0.0 };
-	Vert txFinish{ 1.0, 1.0 };
-	field->RenderTexture(upSideCoords[0], upSideCoords[COUNT_QUADS - 1], colors::fieldBackground, E_FIELD, txStart, txFinish);
-	//field->RenderTexture(upSideCoords[0], downSideCoords[COUNT_QUADS - 1], colors::fieldBackground, E_FIELD, txStart, txFinish);
-	//field->RenderTexture(downSideCoords[0], downSideCoords[COUNT_QUADS-1], colors::fieldBackground, E_FIELD, txStart, txFinish);
-
-	return;
-*/
