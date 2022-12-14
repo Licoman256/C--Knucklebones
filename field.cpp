@@ -1,7 +1,9 @@
 #include "game.h"
 #include <string>
 
-Field::Field() {
+Field::Field() :
+    mapLayouts(countPlayers)
+{
     ClearLayout();
     arc.Bind(this);
     movingDice.Bind(this, &arc);
@@ -73,14 +75,12 @@ void Field::RenderCommon(GLFWwindow* window) {
     // window background
     Vert start { -1.0, 1.0 };
     Vert finish{ 1.0, -1.0 };
-    Vert txStart { 0.0, 0.0 };
-    Vert txFinish{ 1.0, 1.0 };
-    RenderTexture(start, finish, colors::white, E_BACKGROUND, txStart, txFinish);
+    RenderTexture(start, finish, colors::white, E_BACKGROUND);
 
     // field background
     start =  { xFieldOrigin,            yFieldOrigin };
     finish = { xFieldOrigin + fieldLen, yFieldOrigin - fieldHeight};
-    RenderTexture(start, finish, colors::fieldBackground, E_FIELD, txStart, txFinish);
+    RenderTexture(start, finish, colors::fieldBackground, E_FIELD);
 }
 
 void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
@@ -214,8 +214,6 @@ void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
     int digit = value - 1;
 
     // shrink the slot
-    float reducedSlotLen    = slotLen    * diceSlotOccupation;
-    float reducedSlotHeight = slotHeight * diceSlotOccupation;
     float reducedSlotStartX = slotStartX + slotLen    * (1 - diceSlotOccupation) / 2;
     float reducedSlotStartY = slotStartY - slotHeight * (1 - diceSlotOccupation) / 2;
 
@@ -228,11 +226,10 @@ void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
         diceOffsetX  = 0;
     }
 
-    MyColor color;
-    ChangeDiceColor(dice.GetMul(), color);
     Vert start =  { reducedSlotStartX + diceOffsetX,                  reducedSlotStartY - diceOffsetY};
     Vert finish = { reducedSlotStartX - diceOffsetX + reducedSlotLen, reducedSlotStartY + diceOffsetY - reducedSlotHeight };
-    Vert txStart{ 0.0, 0.0 };
-    Vert txFinish{ 1.0, 1.0 };
-    RenderTexture(start, finish, color, E_DICE_1 + digit, txStart, txFinish);
+
+    MyColor color;
+    ChangeDiceColor(dice.GetMul(), color);
+    RenderTexture(start, finish, color, E_DICE_1 + digit);
 }

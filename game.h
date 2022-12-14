@@ -21,7 +21,7 @@ enum MainState {
     ES_ASK_FOR_RESTART
 };
 
-class Game {
+class Game : public Constants {
 
 public:
     Game();

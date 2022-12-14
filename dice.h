@@ -23,13 +23,16 @@ private:
 };
 
 class MovingDice : public RenderElement {
-private:
-	class LightArc* arc = nullptr;
-	class Field* field = nullptr;
-	virtual void Render(void);
-	float travelTime = 0.f;
 public:
-	void Bind(Field* _field, LightArc* _arc);
+	void Bind(class Field* _field, class LightArc* _arc);
 	void Animate(float deltaTime);
+	void SetValue(int val);
 	void ResetTime();
+	bool DoneAnimating();
+private:
+	LightArc* arc = nullptr;
+	Field* field = nullptr;
+	virtual void Render(void);
+	int value = 0;
+	float travelTime = 0.f;
 };

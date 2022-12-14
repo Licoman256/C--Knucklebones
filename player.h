@@ -4,9 +4,6 @@
 #include "render.h"
 #include "dice.h"
 
-const int countGroupsPerPlayer = 4;
-const int countRowsPerGroup = 3;
-
 class Group {
 public:
 	Group(int _rows);

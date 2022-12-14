@@ -46,22 +46,62 @@ void MovingDice::Bind(Field* _field, LightArc* _arc) {
 	arc = _arc;
 }
 
+void MovingDice::SetValue(int val) {
+	value = val;
+}
+
 void MovingDice::ResetTime() {
 	travelTime = 0;
 }
 
+bool MovingDice::DoneAnimating() {
+	if (travelTime >= arc->COUNT_QUADS - 1) {
+		return true;
+	}
+	return false;
+}
+
 void MovingDice::Animate(float deltaTime) {
-	static float speed = 100.f;
+	static float speed = 20.f;
 	travelTime += speed * deltaTime;
 }
 
 void MovingDice::Render() {
-	if (travelTime >= arc->COUNT_QUADS){
-		return;
-	}
-	MyColor color = colors::white;
-	glColor3d(color.red, color.green, color.blue);
+	//if (travelTime >= arc->COUNT_QUADS){
+	//	return;
+	//}
 	
-	int quadIdx = travelTime;
-	field->RenderTexture(arc->upSide[quadIdx], arc->dnSide[quadIdx], colors::white, E_DICE_6, Vert{1,1}, Vert{0, 0});
+	// get point of center of arc
+	Vert midPoint = arc->GetPoint(travelTime);
+
+	// place dice
+	float xSlotStart = midPoint.x - slotLen / 2;
+	float ySlotStart = midPoint.y + slotHeight / 2;
+
+	Dice dummy;
+	dummy.SetValue(value);
+	field->Render(dummy, xSlotStart, ySlotStart);
+}
+
+Vert LightArc::GetPoint(float travelTime) {
+	// which quad we are using
+	int quadIdx = static_cast<int>(travelTime);
+	if (quadIdx + 1 >= COUNT_QUADS) {
+		return Vert();
+	}
+
+	// calucalate which part of middle line we need
+	Vert middleStart = { (upSide[quadIdx].x + upSide[quadIdx].x) / 2,
+						 (dnSide[quadIdx].y + dnSide[quadIdx].y) / 2 };
+	Vert middleFinish = { (upSide[quadIdx + 1].x + upSide[quadIdx + 1].x) / 2,
+						  (dnSide[quadIdx + 1].y + dnSide[quadIdx + 1].y) / 2 };
+
+	Vert middleDelta = { middleFinish.x - middleStart.x,
+						 middleFinish.y - middleStart.y};
+
+	float fraction = travelTime - quadIdx;
+
+	Vert result = { middleStart.x + middleDelta.x * fraction,
+					middleStart.y + middleDelta.y * fraction };
+	return result;
 }

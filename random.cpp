@@ -6,7 +6,7 @@ namespace random {
 	std::random_device rd;
 	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> randomDice(1, 6);
-	std::uniform_int_distribution<int> randomGroup(0, countGroupsPerPlayer);
+	std::uniform_int_distribution<int> randomGroup(0, Constants::countGroupsPerPlayer);
 	std::uniform_int_distribution<int> randomBool(0, 1);
 
 

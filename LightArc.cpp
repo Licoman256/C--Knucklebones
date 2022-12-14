@@ -35,6 +35,9 @@ void Field::PrepareArc(Player& player) {
 
 	// relay
 	arc.Prepare(boxCoords, slotCoords);
+
+	// assign dice
+	movingDice.SetValue(player.boxDice.GetValue());
 }
 
 void LightArc::Prepare(Vert start, Vert end) {

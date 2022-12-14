@@ -16,14 +16,12 @@ Game::Game()
 		return;
 	doneGlfwInit = true;
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(field.WINDOW_WIDTH, field.WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
+	window = field.CreateWindow();
 	if (!window) {
 		return;
 	}
 
 	mainState = ES_STARTUP;
-	return;
 }
 
 std::chrono::steady_clock::duration timeChronoStart;
@@ -115,17 +113,14 @@ void Game::HandlePressedKey() {
 
 void Game::OnMoveToField() {
 	// play animation
-	static int timerFrames = 0;
 	field.arc.Animate(deltaTime);
 	field.movingDice.Animate(deltaTime);
-	timerFrames++;
 	// done => next state
-	if (timerFrames >= 40) {
+	if (field.movingDice.DoneAnimating()) {
 		mainState = ES_DESTROY_DICES;
 		players[curPlayerIdx].MoveToField();
 		players[curPlayerIdx].RecalcScore();
 		field.movingDice.ResetTime();
-		timerFrames = 0;
 	}
 
 	//if (players[curPlayerIdx].isAI) {
@@ -206,19 +201,13 @@ void Game::OnStartup() {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetFramebufferSizeCallback(window, resize_callback);
 
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-
-	// tell OpenGL where to render
-	glViewport(0, 0, field.WINDOW_WIDTH, field.WINDOW_HEIGHT);
-
 	// bind all players
 	for (int i = 0; i < countPlayers; i++) {
 		players[i].Bind(&field, i);
 	}
 
 	// gfx
-	field.PrepareTextures();
+	field.LoadMainBlockTex();
 	field.PrepareShaders();
 	field.EnableTransparancy();
 

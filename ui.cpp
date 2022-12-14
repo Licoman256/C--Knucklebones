@@ -21,24 +21,49 @@ void Game::key_callback(GLFWwindow* window, int key, int scancode, int action, i
 
 static char const* textFileNames[TEXTURE_LAST] = {
 	"data/background.png",
+	"data/field.png",
+	"data/slot.png",
+	"data/numbers.png",
+	"data/lightning.png",
 	"data/dice1.png",
 	"data/dice2.png",
 	"data/dice3.png",
 	"data/dice4.png",
 	"data/dice5.png",
 	"data/dice6.png",
-	"data/field.png",
-	"data/slot.png",
-	"data/numbers.png",
-	"data/lightning.png"
 };
 
-void Field::PrepareTextures() {
+GLFWwindow* Field::CreateWindow() {
+	// Create a windowed mode window and its OpenGL context
+	auto window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Knucklebones", NULL, NULL);
+	if (window) {
+		// Make the window's context current
+		glfwMakeContextCurrent(window);
+
+		// tell OpenGL where to render
+		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+		// have minimal textures for the first render
+		StartupTextures();
+	}
+
+	return window;
+}
+
+
+void Field::StartupTextures() {
 	// generate names
 	glGenTextures(COUNT_TEX_NAMES, textureNames);
 
+	// load what's needed on start
+	LoadTexture(E_BACKGROUND, textFileNames[E_BACKGROUND]);
+	LoadTexture(E_FIELD,      textFileNames[E_FIELD]);
+}
+
+void Field::LoadMainBlockTex() {
+
 	// load for each
-	for (int i = 0; i < TEXTURE_LAST; i++) {
+	for (int i = E_SLOT; i < TEXTURE_LAST; i++) {
 		LoadTexture(i, textFileNames[i]);
 	}
 

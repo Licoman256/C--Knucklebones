@@ -1,7 +1,7 @@
 #include "game.h"
 #include "dice.h"
 
-Group::Group(int _rows = countRowsPerGroup)
+Group::Group(int _rows = Constants::countRowsPerGroup)
 	: dices(_rows)
 {}
 Group::~Group()
@@ -91,7 +91,7 @@ bool Group::Add(Dice &toplace) {
 			dices[i] = toplace;
 			addingTo = i;
 			countDices++;
-			if (countDices == countRowsPerGroup) {
+			if (countDices == Constants::countRowsPerGroup) {
 				isFull = true;
 			}
 			return true;
