@@ -84,12 +84,14 @@ void Game::OnThrowDice() {
 
 void Game::OnAISelectKeyToPress() {
 	assert(players[curPlayerIdx].isAI);
-
+	// "think"
+	//Sleep(50);
 	// for now AI players hit random keys
 	pressedKey = '1' + random::Group();
 }
 
 void Game::HandlePressedKey() {
+	players[curPlayerIdx].isThinking = true;
 	// input is from any of two: player or AI
 	
 	// is it anything meaningful?
@@ -108,6 +110,7 @@ void Game::HandlePressedKey() {
 
 		// proceed to draw and animate the arc
 		mainState = ES_MOVE_DICE_TO_FIELD;
+		players[curPlayerIdx].isThinking = false;
 	}
 }
 
@@ -217,7 +220,7 @@ void Game::OnStartup() {
 	#endif
 
 	// part of game logic
-	//players[0].isAI = false;
+	players[0].isAI = false;
 	//players[2].isAI = false;
 	players[0].StartTurn();
 
@@ -259,6 +262,7 @@ void Game::FillRQueue() {
 		rQueue.push_back(&field.arc);
 		rQueue.push_back(&field.movingDice);
 	}
+	
 	// 
 	// fill render queue depending on main state
 	// popup.Render();

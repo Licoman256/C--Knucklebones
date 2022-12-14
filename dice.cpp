@@ -2,6 +2,7 @@
 #include "random.h"
 #include "LightArc.h"
 #include "field.h"
+#include <cassert>
 
 Dice::Dice()
 	: value(0)
@@ -86,9 +87,7 @@ void MovingDice::Render() {
 Vert LightArc::GetPoint(float travelTime) {
 	// which quad we are using
 	int quadIdx = static_cast<int>(travelTime);
-	if (quadIdx + 1 >= COUNT_QUADS) {
-		return Vert();
-	}
+	assert(quadIdx < COUNT_QUADS - 1);
 
 	// calucalate which part of middle line we need
 	Vert middleStart = { (upSide[quadIdx].x + upSide[quadIdx].x) / 2,

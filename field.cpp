@@ -118,7 +118,7 @@ void Field::Render(const Player& player) {
     // box
     RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
     Render(player.totalScore, xBoxOrigin, lay.yBoxOrigin - (slotHeight + yOffset));
-    if (player.isActive) {
+    if (player.isThinking) {
         Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
     }
     

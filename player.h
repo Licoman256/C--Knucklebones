@@ -32,6 +32,7 @@ public:
 	Dice boxDice;
 
 	bool isActive;
+	bool isThinking = false;
 	int totalScore;
 
 	bool isAI;
