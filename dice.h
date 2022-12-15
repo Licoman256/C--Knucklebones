@@ -34,5 +34,5 @@ private:
 	Field* field = nullptr;
 	virtual void Render(void);
 	int value = 0;
-	float travelTime = 0.f;
+	float travelDist = 0.f;
 };

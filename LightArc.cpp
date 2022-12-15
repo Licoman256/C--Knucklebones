@@ -2,6 +2,8 @@
 #include "field.h"
 #include "random.h"
 
+//#define DEBUG_ARC_RENDER
+
 void LightArc::Bind(Field* _field) {
 	field = _field;
 }
@@ -18,20 +20,42 @@ void LightArc::Render() {
 		}
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
+
+	DebugRenderArc();
+}
+
+void LightArc::DebugRenderArc() {
+#ifdef DEBUG_ARC_RENDER
+	glColor3d(0, 0, 0);
+
+	glBegin(GL_LINES);
+	for (int i = 0; i < COUNT_QUADS; i++) {
+		glVertex2f(dnSide[i].x, dnSide[i].y);
+		glVertex2f(upSide[i].x, upSide[i].y);
+
+		if (i < COUNT_QUADS - 1) {
+			auto midStart = GetPoint((float)i);
+			auto midEnd = GetPoint((float)i + .95f);
+			glVertex2f(midStart.x, midStart.y);
+			glVertex2f(midEnd.x, midEnd.y);
+		}
+	}
+	glEnd();
+#endif // DEBUG_ARC_RENDER
 }
 
 void Field::PrepareArc(Player& player) {
 	// start
 	auto layout = GetLayout(&player);
-	Vert boxCoords = {       xBoxOrigin + slotLen / 2,
-					  layout.yBoxOrigin - slotHeight / 2 };
+	Vert boxCoords = {       xBoxOrigin + slotLen * .5f,
+					  layout.yBoxOrigin - slotHeight * .5f };
 
 
 	// end
 	auto groupIdx = player.addingTo;
 	auto slotIdx = player.groups[groupIdx].addingTo;
-	Vert slotCoords = {       xSlotOrigin + groupIdx * (xOffset + slotLen)    + slotLen / 2,
-					   layout.ySlotOrigin - slotIdx * (yOffset + slotHeight)  - slotHeight / 2};
+	Vert slotCoords = {       xSlotOrigin + groupIdx * (xOffset + slotLen)    + slotLen * .5f,
+					   layout.ySlotOrigin - slotIdx * (yOffset + slotHeight)  - slotHeight * .5f};
 
 	// relay
 	arc.Prepare(boxCoords, slotCoords);
@@ -61,10 +85,10 @@ void LightArc::Prepare(Vert start, Vert end) {
 	// calc initial velocity 
 	// -- we will simulate one sec in each loop iteration
 	Vert velocity;
-	float travelTime = (COUNT_QUADS - 1);
-	velocity.x = target.x / travelTime;
-	float verticalShift = gravity * 0.5f * travelTime * travelTime;
-	velocity.y = (target.y + verticalShift) / travelTime;
+	float travelDist = (COUNT_QUADS - 1);
+	velocity.x = target.x / travelDist;
+	float verticalShift = gravity * 0.5f * travelDist * travelDist;
+	velocity.y = (target.y + verticalShift) / travelDist;
 
 	// current point gonna travel from start to end
 	Vert curPoint = start;

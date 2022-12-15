@@ -118,6 +118,7 @@ void Game::OnMoveToField() {
 	// play animation
 	field.arc.Animate(deltaTime);
 	field.movingDice.Animate(deltaTime);
+	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
 		mainState = ES_DESTROY_DICES;

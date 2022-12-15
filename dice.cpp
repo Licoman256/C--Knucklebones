@@ -52,11 +52,11 @@ void MovingDice::SetValue(int val) {
 }
 
 void MovingDice::ResetTime() {
-	travelTime = 0;
+	travelDist = 0;
 }
 
 bool MovingDice::DoneAnimating() {
-	if (travelTime >= arc->COUNT_QUADS - 1) {
+	if (travelDist >= arc->COUNT_QUADS - 1) {
 		return true;
 	}
 	return false;
@@ -64,7 +64,7 @@ bool MovingDice::DoneAnimating() {
 
 void MovingDice::Animate(float deltaTime) {
 	static float speed = 20.f;
-	travelTime += speed * deltaTime;
+	travelDist += speed * deltaTime;
 }
 
 void MovingDice::Render() {
@@ -73,32 +73,36 @@ void MovingDice::Render() {
 	//}
 	
 	// get point of center of arc
-	Vert midPoint = arc->GetPoint(travelTime);
+	Vert midPoint = arc->GetPoint(travelDist);
 
 	// place dice
-	float xSlotStart = midPoint.x - slotLen / 2;
-	float ySlotStart = midPoint.y + slotHeight / 2;
+	float xSlotStart = midPoint.x - slotLen * .5f;
+	float ySlotStart = midPoint.y + slotHeight * .5f;
 
 	Dice dummy;
 	dummy.SetValue(value);
 	field->Render(dummy, xSlotStart, ySlotStart);
 }
 
-Vert LightArc::GetPoint(float travelTime) {
+// IN: [m]
+Vert LightArc::GetPoint(float travelDist) {
+	// convert distance to travelled part of the trajectory [0, COUNT_QUADS] 
+	float travelledTraj = travelDist;
+
 	// which quad we are using
-	int quadIdx = static_cast<int>(travelTime);
+	int quadIdx = static_cast<int>(travelledTraj);
 	assert(quadIdx < COUNT_QUADS - 1);
 
 	// calucalate which part of middle line we need
-	Vert middleStart = { (upSide[quadIdx].x + upSide[quadIdx].x) / 2,
-						 (dnSide[quadIdx].y + dnSide[quadIdx].y) / 2 };
-	Vert middleFinish = { (upSide[quadIdx + 1].x + upSide[quadIdx + 1].x) / 2,
-						  (dnSide[quadIdx + 1].y + dnSide[quadIdx + 1].y) / 2 };
+	Vert middleStart = { (upSide[quadIdx].x + dnSide[quadIdx].x) * .5f,
+						 (dnSide[quadIdx].y + upSide[quadIdx].y) * .5f };
+	Vert middleFinish = { (upSide[quadIdx + 1].x + dnSide[quadIdx + 1].x) * .5f,
+						  (dnSide[quadIdx + 1].y + upSide[quadIdx + 1].y) * .5f };
 
 	Vert middleDelta = { middleFinish.x - middleStart.x,
 						 middleFinish.y - middleStart.y};
 
-	float fraction = travelTime - quadIdx;
+	float fraction = travelledTraj - quadIdx;
 
 	Vert result = { middleStart.x + middleDelta.x * fraction,
 					middleStart.y + middleDelta.y * fraction };

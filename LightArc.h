@@ -3,6 +3,7 @@
 
 class LightArc : public RenderElement {
 	virtual void Render(void);
+	void DebugRenderArc();
 	class Field* field = nullptr;
 public:
 	void Bind(Field* _field);
@@ -10,7 +11,7 @@ public:
 	void Prepare(Vert start, Vert end);
 	void Animate(float deltaTime);
 
-	Vert GetPoint(float travelTime);
+	Vert GetPoint(float travelDist);
 
 private:
 	float thickness = 0.f;
