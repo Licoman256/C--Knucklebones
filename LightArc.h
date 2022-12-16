@@ -9,8 +9,10 @@ public:
 	void Bind(Field* _field);
 	static const int COUNT_QUADS = 50;
 	void Prepare(Vert start, Vert end);
+	void ChangeGravity(Vert& start);
 	void Animate(float deltaTime);
 
+	bool DoneAnimating(float travelDist);
 	Vert GetPoint(float travelDist);
 
 private:
@@ -18,8 +20,17 @@ private:
 	float gravity = 0.f;
 	float speed = 3.f;
 
-	Vert upSide[COUNT_QUADS];
-	Vert dnSide[COUNT_QUADS];
-	float tex[COUNT_QUADS];
+	struct ArcElem {
+		struct {
+			Vert up;
+			Vert md;
+			Vert dn;
+		} side;
+		float tex;
+		float trvDist;
+	};
+	ArcElem elems[COUNT_QUADS];
+
 	void FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& velocity, const Vert& nextPoint);
+	void ConvertTravelDist(float travelDist, int& quadIdx, float& fraction);
 };

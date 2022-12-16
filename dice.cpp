@@ -56,21 +56,24 @@ void MovingDice::ResetTime() {
 }
 
 bool MovingDice::DoneAnimating() {
-	if (travelDist >= arc->COUNT_QUADS - 1) {
-		return true;
+	bool isDone = arc->DoneAnimating(travelDist);
+	if (isDone) {
+		speed = startingSpeed;
 	}
-	return false;
+	return isDone;
 }
 
 void MovingDice::Animate(float deltaTime) {
-	static float speed = 20.f;
+	// debug
+	//deltaTime = 0.01;
+	
+	if (speed <= maxSpeed) {
+		speed += accel;
+	}
 	travelDist += speed * deltaTime;
 }
 
 void MovingDice::Render() {
-	//if (travelTime >= arc->COUNT_QUADS){
-	//	return;
-	//}
 	
 	// get point of center of arc
 	Vert midPoint = arc->GetPoint(travelDist);
@@ -84,27 +87,38 @@ void MovingDice::Render() {
 	field->Render(dummy, xSlotStart, ySlotStart);
 }
 
+bool LightArc::DoneAnimating(float travelDist) {
+	if (travelDist >= elems[COUNT_QUADS - 1].trvDist) {
+		return true;
+	}
+	return false;
+}
+
 // IN: [m]
 Vert LightArc::GetPoint(float travelDist) {
 	// convert distance to travelled part of the trajectory [0, COUNT_QUADS] 
-	float travelledTraj = travelDist;
-
+	int quadIdx;
+	float fraction;
+	ConvertTravelDist(travelDist, quadIdx, fraction);
+	
 	// which quad we are using
-	int quadIdx = static_cast<int>(travelledTraj);
-	assert(quadIdx < COUNT_QUADS - 1);
+	assert(quadIdx < COUNT_QUADS);
 
-	// calucalate which part of middle line we need
-	Vert middleStart = { (upSide[quadIdx].x + dnSide[quadIdx].x) * .5f,
-						 (dnSide[quadIdx].y + upSide[quadIdx].y) * .5f };
-	Vert middleFinish = { (upSide[quadIdx + 1].x + dnSide[quadIdx + 1].x) * .5f,
-						  (dnSide[quadIdx + 1].y + upSide[quadIdx + 1].y) * .5f };
+	Vert middleDelta = { elems[quadIdx + 1].side.md.x - elems[quadIdx].side.md.x,
+						 elems[quadIdx + 1].side.md.y - elems[quadIdx].side.md.y };
 
-	Vert middleDelta = { middleFinish.x - middleStart.x,
-						 middleFinish.y - middleStart.y};
-
-	float fraction = travelledTraj - quadIdx;
-
-	Vert result = { middleStart.x + middleDelta.x * fraction,
-					middleStart.y + middleDelta.y * fraction };
+	Vert result = { elems[quadIdx].side.md.x + middleDelta.x * fraction,
+					elems[quadIdx].side.md.y + middleDelta.y * fraction };
 	return result;
+}
+
+void LightArc::ConvertTravelDist(float travelDist, int& quadIdx, float& fraction) {
+	for (int i = 0; i < COUNT_QUADS; i++) {
+		if (elems[i].trvDist > travelDist) {
+			quadIdx = i - 1;
+			fraction = (travelDist       - elems[i - 1].trvDist)
+					 / (elems[i].trvDist - elems[i - 1].trvDist);
+			return;
+		}
+	}
 }

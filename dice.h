@@ -35,4 +35,8 @@ private:
 	virtual void Render(void);
 	int value = 0;
 	float travelDist = 0.f;
+	const float startingSpeed = 0.f;
+	const float maxSpeed = 2.0f;
+	const float accel = 0.02f;
+	float speed = startingSpeed;
 };

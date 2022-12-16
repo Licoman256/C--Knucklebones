@@ -15,8 +15,8 @@ void LightArc::Render() {
 	field->ChangeTexture(E_LIGHTNING);
 	glBegin(GL_QUAD_STRIP);
 		for (int i = 0; i < COUNT_QUADS; i++) {
-			glTexCoord2f(tex[i], 0); glVertex2f(dnSide[i].x, dnSide[i].y);
-			glTexCoord2f(tex[i], 1); glVertex2f(upSide  [i].x, upSide  [i].y);
+			glTexCoord2f(elems[i].tex, 0); glVertex2f(elems[i].side.dn.x, elems[i].side.dn.y);
+			glTexCoord2f(elems[i].tex, 1); glVertex2f(elems[i].side.up.x, elems[i].side.up.y);
 		}
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
@@ -65,34 +65,26 @@ void Field::PrepareArc(Player& player) {
 }
 
 void LightArc::Prepare(Vert start, Vert end) {
-	tex[0] = 0.0f;
 	Vert target{ (end.x - start.x) ,
 				 (end.y - start.y) };
 
 	thickness = target.x / 5;
-	gravity = sqrtf(thickness) / 300;
-	
-	// flip gravity for players that are high up
-	if (start.y > 0) {
-		gravity *= -1;
-	}
-
-	// random gravity for middle player
-	if (abs(start.y) < 0.1f && random::Bool()) {
-		gravity *= -1;
-	}
+	ChangeGravity(start);
 
 	// calc initial velocity 
-	// -- we will simulate one sec in each loop iteration
+	// - we will simulate one sec in each loop iteration
 	Vert velocity;
 	float travelDist = (COUNT_QUADS - 1);
 	velocity.x = target.x / travelDist;
 	float verticalShift = gravity * 0.5f * travelDist * travelDist;
 	velocity.y = (target.y + verticalShift) / travelDist;
 
-	// current point gonna travel from start to end
+	elems[0].trvDist = 0;
+	elems[0].tex = 0.0f;
+	// current point is going to travel from start to end
 	Vert curPoint = start;
 	FillTrajectotyPoint(0, velocity, velocity, curPoint);
+
 	for (int i = 1; i < COUNT_QUADS; i++) {
 		// step by velocity 
 		curPoint.x += velocity.x * 1;
@@ -107,11 +99,30 @@ void LightArc::Prepare(Vert start, Vert end) {
 		// fill quad sides
 		FillTrajectotyPoint(i, nextVel, velocity, curPoint);
 
-		// iterate
-		velocity = nextVel;
+		// update dist - used by moving dice
+		Vert middleDelta = { elems[i].side.md.x - elems[i - 1].side.md.x,
+						     elems[i].side.md.y - elems[i - 1].side.md.y };
+		elems[i].trvDist = elems[i - 1].trvDist + middleDelta.Len();
 
 		// tex coords
-		tex[i] = tex[i - 1] + 0.1f;
+		elems[i].tex = elems[i - 1].tex + 0.1f;
+
+		// iterate
+		velocity = nextVel;
+	}
+}
+
+void LightArc::ChangeGravity(Vert& start) {
+	gravity = sqrtf(thickness) / 300;
+
+	// flip gravity for players that are high up
+	if (start.y > 0) {
+		gravity *= -1;
+	}
+
+	// random gravity for middle player
+	if (abs(start.y) < 0.1f && random::Bool()) {
+		gravity *= -1;
 	}
 }
 
@@ -140,20 +151,23 @@ void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& veloc
 	};
 
 	// fill quad sides
-	upSide[i] = {
+	elems[i].side.up = {
 		nextPoint.x + sideStep.x,
 		nextPoint.y + sideStep.y
 	};
-	dnSide[i] = {
+	elems[i].side.dn = {
 		nextPoint.x - sideStep.x,
 		nextPoint.y - sideStep.y
 	};
+
+	elems[i].side.md = { (elems[i].side.up.x + elems[i].side.dn.x) * .5f,
+						 (elems[i].side.up.y + elems[i].side.dn.y) * .5f };
 }
 
 void LightArc::Animate(float deltaTime) {
 	float deltaTex = speed * deltaTime;
 
 	for (int i = 0; i < COUNT_QUADS; i++) {
-		tex[i] -= deltaTex;
+		elems[i].tex -= deltaTex;
 	}
 }
