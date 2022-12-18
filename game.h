@@ -12,6 +12,7 @@ enum MainState {
             ES_AI_INPUT,
             ES_WAIT_PLAYER_INPUT,
             ES_MOVE_DICE_TO_FIELD,
+            ES_SLOT_SHAKING,
             ES_DESTROY_DICES,
             ES_REODER_IN_GROUPS,
             ES_UPDATE_SCORE,
@@ -55,6 +56,7 @@ private:
     void OnAISelectKeyToPress();
     void HandlePressedKey();
     void OnMoveToField();
+    void OnSlotShaking();
     void OnDestroyDices();
     void OnUpdateScore();
     void ChangeActivePlayer();

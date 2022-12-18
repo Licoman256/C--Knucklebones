@@ -142,6 +142,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="random.cpp" />
+    <ClCompile Include="ShakingSlot.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="render.h" />
+    <ClInclude Include="ShakingSlot.h" />
     <ClInclude Include="stb\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

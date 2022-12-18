@@ -27,7 +27,7 @@ public:
 	void Bind(class Field* _field, class LightArc* _arc);
 	void Animate(float deltaTime);
 	void SetValue(int val);
-	void ResetTime();
+	void Reset();
 	bool DoneAnimating();
 private:
 	LightArc* arc = nullptr;

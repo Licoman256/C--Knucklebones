@@ -51,7 +51,7 @@ void MovingDice::SetValue(int val) {
 	value = val;
 }
 
-void MovingDice::ResetTime() {
+void MovingDice::Reset() {
 	travelDist = 0;
 }
 

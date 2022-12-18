@@ -55,6 +55,7 @@ void Game::Tick() {
 	case ES_AI_INPUT:			  OnAISelectKeyToPress();			// no break
 	case ES_WAIT_PLAYER_INPUT:	  HandlePressedKey();			    break;
 	case ES_MOVE_DICE_TO_FIELD:	  OnMoveToField();					break;
+	case ES_SLOT_SHAKING:		  OnSlotShaking();					break;
 	case ES_DESTROY_DICES:		  OnDestroyDices();					break;
 	case ES_REODER_IN_GROUPS:	  OnReorderInGroups();				break;
 	case ES_UPDATE_SCORE:		  OnUpdateScore();			        break;
@@ -121,15 +122,20 @@ void Game::OnMoveToField() {
 	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
-		mainState = ES_DESTROY_DICES;
 		players[curPlayerIdx].MoveToField();
-		players[curPlayerIdx].RecalcScore();
-		field.movingDice.ResetTime();
+		field.movingDice.Reset();
+		mainState = ES_SLOT_SHAKING;
 	}
+}
 
-	//if (players[curPlayerIdx].isAI) {
-	//	mainState = ES_DESTROY_DICES;
-	//}
+void Game::OnSlotShaking() {
+	field.shakingSlot.Animate(deltaTime);
+	if (field.shakingSlot.DoneAnimating()) {
+		players[curPlayerIdx].RecalcScore();
+
+		field.shakingSlot.Reset();
+		mainState = ES_DESTROY_DICES;
+	}
 }
 
 void Game::OnDestroyDices() {

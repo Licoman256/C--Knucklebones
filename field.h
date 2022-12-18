@@ -2,6 +2,7 @@
 
 #include "player.h"
 #include "LightArc.h"
+#include "ShakingSlot.h"
 
 // Texture Dictionary
 class TexDic {
@@ -20,6 +21,7 @@ public:
     void RenderCommon(GLFWwindow* window);
     void Render(const Player& player);
     void Render(const Dice& dice, float xCur, float yCur);
+    void RenderSlot(MyColor& color, float xCur, float yCur);
 
     GLuint textureNames[COUNT_TEX_NAMES];
     void StartupTextures();
@@ -32,6 +34,10 @@ public:
     void PrepareArc(Player& player);
 
     MovingDice movingDice;
+
+    ShakingSlot shakingSlot;
+
+    bool DoneShaking();
 
     void ChangeTexture(int idxTx);
     void RenderTexture(Vert& rectangleStart, 
@@ -56,7 +62,6 @@ private:
     float dimCoef = 1.f;
     void UpdateDimCoeff(GLFWwindow* window);
 
-    void RenderSlot(MyColor& lay, float xCur, float yCur);
     void Render(int score, float xCur, float yCur);
 
     bool ChangeColor(const Dice& dice); // not used

@@ -7,6 +7,7 @@ Field::Field() :
     ClearLayout();
     arc.Bind(this);
     movingDice.Bind(this, &arc);
+    shakingSlot.Bind(this);
 }
 Field::~Field() {
     // may call ClearLayout();
@@ -92,6 +93,10 @@ void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
     RenderTexture(start, finish, color, E_SLOT, txStart, txFinish);
 }
 
+bool Field::DoneShaking() {
+    return true;
+}
+
 void Field::ChangeTexture(int idxTx) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureNames[idxTx]);
@@ -121,18 +126,30 @@ void Field::Render(const Player& player) {
     if (player.isThinking) {
         Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
     }
-    
+   
     // all slots
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
         
         float yCur = lay.ySlotOrigin;
         for (int j = 0; j < countRowsPerGroup; j++, yCur -= (slotHeight + yOffset)) {
-            RenderSlot(lay.color, xCur, yCur);
-
+            if (shakingSlot.CheckIfInited()
+                && shakingSlot.GetXOrig() == xCur
+                && shakingSlot.GetYOrig() == yCur) 
+            {
+                shakingSlot.Render(lay.color);
+            } else {
+                RenderSlot(lay.color, xCur, yCur);
+            }
+            
             // render dice over the slot
             auto& dice = player.groups[i].dices[j];
             if (dice.CheckIfOnField()) {
-                Render(dice, xCur, yCur);
+                Render(dice, xCur, yCur);           
+            } else {
+                // save slot coordinates that has a dice being added to it
+                if (dice.GetValue() && !shakingSlot.CheckIfInited()) {
+                    shakingSlot.Init(xCur, yCur);
+                }
             }
             
         }
