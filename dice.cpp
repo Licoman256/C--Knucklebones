@@ -94,21 +94,23 @@ bool LightArc::DoneAnimating(float travelDist) {
 	return false;
 }
 
+// linear interpolation
+float Lerp(float from, float frac, float to) {
+	return from * (1.f - frac) + to * frac;
+}
+
 // IN: [m]
 Vert LightArc::GetPoint(float travelDist) {
 	// convert distance to travelled part of the trajectory [0, COUNT_QUADS] 
 	int quadIdx;
 	float fraction;
 	ConvertTravelDist(travelDist, quadIdx, fraction);
-	
-	// which quad we are using
 	assert(quadIdx < COUNT_QUADS);
 
-	Vert middleDelta = { elems[quadIdx + 1].side.md.x - elems[quadIdx].side.md.x,
-						 elems[quadIdx + 1].side.md.y - elems[quadIdx].side.md.y };
+	// lerp
+	Vert result = { Lerp(elems[quadIdx].side.md.x, fraction, elems[quadIdx + 1].side.md.x),
+					Lerp(elems[quadIdx].side.md.y, fraction, elems[quadIdx + 1].side.md.y) };
 
-	Vert result = { elems[quadIdx].side.md.x + middleDelta.x * fraction,
-					elems[quadIdx].side.md.y + middleDelta.y * fraction };
 	return result;
 }
 

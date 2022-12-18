@@ -79,11 +79,11 @@ void LightArc::Prepare(Vert start, Vert end) {
 	float verticalShift = gravity * 0.5f * travelDist * travelDist;
 	velocity.y = (target.y + verticalShift) / travelDist;
 
-	elems[0].trvDist = 0;
-	elems[0].tex = 0.0f;
 	// current point is going to travel from start to end
 	Vert curPoint = start;
 	FillTrajectotyPoint(0, velocity, velocity, curPoint);
+	elems[0].trvDist = 0;
+	elems[0].tex = 0.0f;
 
 	for (int i = 1; i < COUNT_QUADS; i++) {
 		// step by velocity 
@@ -115,14 +115,15 @@ void LightArc::Prepare(Vert start, Vert end) {
 void LightArc::ChangeGravity(Vert& start) {
 	gravity = sqrtf(thickness) / 300;
 
-	// flip gravity for players that are high up
-	if (start.y > 0) {
-		gravity *= -1;
-	}
-
 	// random gravity for middle player
 	if (abs(start.y) < 0.1f && random::Bool()) {
-		gravity *= -1;
+		gravity = -gravity;
+		return;
+	}
+
+	// flip gravity for players that are high up
+	if (start.y > 0) {
+		gravity = -gravity;
 	}
 }
 
@@ -151,6 +152,7 @@ void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& veloc
 	};
 
 	// fill quad sides
+	elems[i].side.md = nextPoint;
 	elems[i].side.up = {
 		nextPoint.x + sideStep.x,
 		nextPoint.y + sideStep.y
@@ -159,9 +161,6 @@ void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& veloc
 		nextPoint.x - sideStep.x,
 		nextPoint.y - sideStep.y
 	};
-
-	elems[i].side.md = { (elems[i].side.up.x + elems[i].side.dn.x) * .5f,
-						 (elems[i].side.up.y + elems[i].side.dn.y) * .5f };
 }
 
 void LightArc::Animate(float deltaTime) {
