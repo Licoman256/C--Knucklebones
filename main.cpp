@@ -16,6 +16,7 @@ void Game::RunMainLoop() {
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
 		Render();
+		Animate();
 		glfwPollEvents();
 		Tick();
 

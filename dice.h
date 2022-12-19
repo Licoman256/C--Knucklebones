@@ -22,13 +22,14 @@ private:
 	int multiplier;
 };
 
-class MovingDice : public RenderElement {
+class MovingDice : public RenderElement, public AnimatingPhase {
 public:
+	virtual void Animate(float deltaTime);
+	virtual bool DoneAnimating();
+	virtual void Reset();
+
 	void Bind(class Field* _field, class LightArc* _arc);
-	void Animate(float deltaTime);
 	void SetValue(int val);
-	void Reset();
-	bool DoneAnimating();
 private:
 	LightArc* arc = nullptr;
 	Field* field = nullptr;

@@ -53,14 +53,11 @@ void MovingDice::SetValue(int val) {
 
 void MovingDice::Reset() {
 	travelDist = 0;
+	speed = startingSpeed;
 }
 
 bool MovingDice::DoneAnimating() {
-	bool isDone = arc->DoneAnimating(travelDist);
-	if (isDone) {
-		speed = startingSpeed;
-	}
-	return isDone;
+	return arc->DoneAnimating(travelDist);
 }
 
 void MovingDice::Animate(float deltaTime) {

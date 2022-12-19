@@ -1,24 +1,23 @@
 #pragma once
 #include "render.h"
 
-class ShakingSlot {
+class ShakingSlot: public AnimatingPhase {
 	class Field* field = nullptr;
 public:
+	void Animate(float deltaTime);
+	bool DoneAnimating();
+	void Reset();
 
 	ShakingSlot();
 	void Bind(Field* _field);
 
-	void Animate(float deltaTime);
-	bool DoneAnimating();
 	void Render(MyColor color);
-	
 	bool CheckIfInited();
 	void Init(float x, float y);
 
 	float GetXOrig();
 	float GetYOrig();
 
-	void Reset();
 	~ShakingSlot();
 private:
 

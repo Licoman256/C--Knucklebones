@@ -44,9 +44,6 @@ u64 ChronoRound() {
 
 
 void Game::Tick() {
-	// how much time is spent
-	deltaTime = ChronoRound() / 1000.f;
-
 	// do FSM
 	switch (mainState) {
 	case ES_STARTUP:              OnStartup();				        break;
@@ -118,7 +115,6 @@ void Game::HandlePressedKey() {
 void Game::OnMoveToField() {
 	// play animation
 	field.arc.Animate(deltaTime);
-	field.movingDice.Animate(deltaTime);
 	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
@@ -129,7 +125,6 @@ void Game::OnMoveToField() {
 }
 
 void Game::OnSlotShaking() {
-	field.shakingSlot.Animate(deltaTime);
 	if (field.shakingSlot.DoneAnimating()) {
 		players[curPlayerIdx].RecalcScore();
 
@@ -255,6 +250,15 @@ void Game::Render() {
 	glfwSwapBuffers(window);
 }
 
+void Game::Animate() {
+	// how much time is spent
+	deltaTime = ChronoRound() / 1000.f;
+	FillAQueue();
+	for (auto aElem : aQueue) {
+		aElem->Animate(deltaTime);
+	}
+}
+
 void Game::FillRQueue() {
 	rQueue.clear();
 
@@ -273,6 +277,19 @@ void Game::FillRQueue() {
 	// 
 	// fill render queue depending on main state
 	// popup.Render();
+}
+
+void Game::FillAQueue() {
+	aQueue.clear();
+
+	if (mainState == ES_MOVE_DICE_TO_FIELD) {
+		aQueue.push_back(&field.movingDice);
+	}
+
+	if (mainState == ES_SLOT_SHAKING) {
+		aQueue.push_back(&field.shakingSlot);
+	}
+
 }
 
 void Game::End() {

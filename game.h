@@ -35,9 +35,13 @@ private:
     bool doneGlfwInit = false;
     GLFWwindow* window = nullptr;
     Field field;
-    std::deque< RenderElement* > rQueue;
+    std::deque< RenderElement* >  rQueue;
     void Render();
     void FillRQueue();
+
+    std::deque< AnimatingPhase* > aQueue;
+    void Animate();
+    void FillAQueue();
 
     // states
     void OnStartup();

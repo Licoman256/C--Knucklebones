@@ -6,13 +6,15 @@ class LightArc : public RenderElement {
 	void DebugRenderArc();
 	class Field* field = nullptr;
 public:
+
+	void Animate(float deltaTime);
+	bool DoneAnimating(float travelDist);
+
 	void Bind(Field* _field);
 	static const int COUNT_QUADS = 50;
 	void Prepare(Vert start, Vert end);
 	void ChangeGravity(Vert& start);
-	void Animate(float deltaTime);
-
-	bool DoneAnimating(float travelDist);
+	
 	Vert GetPoint(float travelDist);
 
 private:
