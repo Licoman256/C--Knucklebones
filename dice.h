@@ -8,10 +8,11 @@ public:
 
 	void Throw();
 	void MoveToField();
-	bool CheckIfOnField() const;
+	bool IsOnField() const { return isOnField; }
 
-	int  GetValue() const;
+	int  GetValue() const { return value; }
 	void SetValue(int v) { value = v; }
+
 	int  GetMul() const;
 	void SetMul(int pw);
 
@@ -37,7 +38,7 @@ private:
 	int value = 0;
 	float travelDist = 0.f;
 	const float startingSpeed = 0.2f;
-	const float maxSpeed = 2.0f;
+	const float maxSpeed = 20.0f;
 	const float accel = 0.02f;
 	float speed = startingSpeed;
 };

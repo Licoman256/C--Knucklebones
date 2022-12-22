@@ -84,10 +84,10 @@ void Field::RenderCommon(GLFWwindow* window) {
     RenderTexture(start, finish, colors::fieldBackground, E_FIELD);
 }
 
-void Field::RenderSlot(MyColor& color, float xCur, float yCur) {
+void Field::RenderSlot(MyColor& color, float xCur, float yCur, float slLen, float slHeight) {
 
     Vert start  { xCur,           yCur };
-    Vert finish { xCur + slotLen, yCur - slotHeight };
+    Vert finish { xCur + slLen, yCur - slHeight };
     Vert txStart{ 0.0, 0.0 };
     Vert txFinish{ 1.0, 1.0 };
     RenderTexture(start, finish, color, E_SLOT, txStart, txFinish);
@@ -121,42 +121,48 @@ void Field::Render(const Player& player) {
     float xCur = xSlotOrigin;
 
     // box
-    RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin);
+    RenderSlot(lay.color, xBoxOrigin, lay.yBoxOrigin, slotLen, slotHeight);
     Render(player.totalScore, xBoxOrigin, lay.yBoxOrigin - (slotHeight + yOffset));
+
+    // dice over the box
     if (player.isThinking) {
         Render(player.boxDice, xBoxOrigin, lay.yBoxOrigin);
     }
-   
+
     // all slots
     for (int i = 0; i < countGroupsPerPlayer; i++, xCur += (slotLen + xOffset)) {
-        
+        // group
         float yCur = lay.ySlotOrigin;
         for (int j = 0; j < countRowsPerGroup; j++, yCur -= (slotHeight + yOffset)) {
-            if (shakingSlot.CheckIfInited()
-                && shakingSlot.GetXOrig() == xCur
-                && shakingSlot.GetYOrig() == yCur) 
-            {
-                shakingSlot.Render(lay.color);
-            } else {
-                RenderSlot(lay.color, xCur, yCur);
-            }
-            
-            // render dice over the slot
+            // skip shaking slot
+            if (shakingSlot.LaysUpon(i, j, player.isActive)) {
+                continue;
+            } 
+
+            // slot with its dice
             auto& dice = player.groups[i].dices[j];
-            if (dice.CheckIfOnField()) {
-                Render(dice, xCur, yCur);           
-            } else {
-                // save slot coordinates that has a dice being added to it
-                if (dice.GetValue() && !shakingSlot.CheckIfInited()) {
-                    shakingSlot.Init(xCur, yCur);
-                }
+            RenderSlot(lay.color, xCur, yCur, slotLen, slotHeight);
+            if (dice.IsOnField()) {
+                Render(dice, xCur, yCur);
             }
-            
         }
-        // render group score
+
+        // group score
         Render(player.groups[i].GetScore(), xCur, yCur);
     }
 }
+
+//shakingSlot.Render(lay.color);
+//            // may render dice over the slot
+//if (dice.IsOnField()) {
+//    Render(dice, xCur, yCur);
+//} else {
+//    // save slot coordinates that has a dice being added to it
+//    if (dice.GetValue() && !shakingSlot.IsInited()) {
+//        shakingSlot.Init(xCur, yCur, slotLen, slotHeight);
+//    }
+//}
+
 
 void Field::Render(int score, float xCur, float yCur) {
     // count digits

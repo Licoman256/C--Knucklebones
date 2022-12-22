@@ -44,6 +44,14 @@ void LightArc::DebugRenderArc() {
 #endif // DEBUG_ARC_RENDER
 }
 
+Vert Field::GetSlotCoords(int groupIdx, int rowIdx, float ySlOrigin) {
+	Vert slotCoords;
+	slotCoords.x = xSlotOrigin + groupIdx * (xOffset + slotLen)     + slotLen    * .5f;
+	slotCoords.y = ySlOrigin   - rowIdx   * (yOffset + slotHeight)  - slotHeight * .5f;
+
+	return slotCoords;
+}
+
 void Field::PrepareArc(Player& player) {
 	// start
 	auto layout = GetLayout(&player);
@@ -53,19 +61,29 @@ void Field::PrepareArc(Player& player) {
 
 	// end
 	auto groupIdx = player.addingTo;
-	auto slotIdx = player.groups[groupIdx].addingTo;
-	Vert slotCoords = {       xSlotOrigin + groupIdx * (xOffset + slotLen)    + slotLen * .5f,
-					   layout.ySlotOrigin - slotIdx * (yOffset + slotHeight)  - slotHeight * .5f};
+	auto rowIdx = player.groups[groupIdx].addingTo;
+	Vert slotCoords = GetSlotCoords(groupIdx, rowIdx, layout.ySlotOrigin);
 
 	// relay
 	arc.Prepare(boxCoords, slotCoords);
 
 	// assign dice
 	movingDice.SetValue(player.boxDice.GetValue());
+
+	// prepare shake
+	int direction = arc.GetGravitySign();
+	float maxTime = sqrtf(slotCoords.x - boxCoords.x);
+
+	shakingSlot.Reset();
+	shakingSlot.SetParams(player, rowIdx, groupIdx, layout.color, layout.ySlotOrigin, direction, maxTime);
 }
 
+int LightArc::GetGravitySign() {
+	return gravity > 0 ? -1 : 1;
+};
+
 void LightArc::Prepare(Vert start, Vert end) {
-	Vert target{ (end.x - start.x) ,
+	Vert target { (end.x - start.x) ,
 				 (end.y - start.y) };
 
 	thickness = target.x / 5;

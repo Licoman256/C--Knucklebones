@@ -14,7 +14,7 @@ public:
 	static const int COUNT_QUADS = 50;
 	void Prepare(Vert start, Vert end);
 	void ChangeGravity(Vert& start);
-	
+	int GetGravitySign();
 	Vert GetPoint(float travelDist);
 
 private:

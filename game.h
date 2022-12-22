@@ -37,11 +37,11 @@ private:
     Field field;
     std::deque< RenderElement* >  rQueue;
     void Render();
-    void FillRQueue();
+    void FillRendQueue();
 
     std::deque< AnimatingPhase* > aQueue;
     void Animate();
-    void FillAQueue();
+    void FillAnimQueue();
 
     // states
     void OnStartup();

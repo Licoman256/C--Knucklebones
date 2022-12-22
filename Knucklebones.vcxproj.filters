@@ -68,11 +68,11 @@
     <ClInclude Include="stb\stb_image.h">
       <Filter>Source Files\Include</Filter>
     </ClInclude>
-    <ClInclude Include="LightArc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ShakingSlot.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="LightArc.h">
+      <Filter>Source Files\Include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

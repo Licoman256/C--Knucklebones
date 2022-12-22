@@ -14,10 +14,6 @@ void Dice::Throw() {
 	// animation of dice spinning in the box
 }
 
-int Dice::GetValue() const {
-	return value;
-}
-
 void Dice::SetMul(int pw) {
 	 multiplier = pw;
 }
@@ -28,10 +24,6 @@ int Dice::GetMul() const {
 
 void Dice::MoveToField() {
 	isOnField = true;
-}
-
-bool Dice::CheckIfOnField() const {
-	return isOnField;
 }
 
 void Dice::Destroy() {
@@ -120,4 +112,6 @@ void LightArc::ConvertTravelDist(float travelDist, int& quadIdx, float& fraction
 			return;
 		}
 	}
+	quadIdx = COUNT_QUADS - 1;
+	fraction = 0;		
 }

@@ -46,7 +46,7 @@ public:
 	void DestroyDices(int diceVal, int grIdx);
 	bool FallDown();
 	bool TryAddingToGroup(int grIdx);
-	void MoveToField();
+	void SetDicesOnField();
 	void RecalcScore();
 
 	~Player();

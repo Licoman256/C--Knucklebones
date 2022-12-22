@@ -21,7 +21,12 @@ public:
     void RenderCommon(GLFWwindow* window);
     void Render(const Player& player);
     void Render(const Dice& dice, float xCur, float yCur);
-    void RenderSlot(MyColor& color, float xCur, float yCur);
+    void RenderSlot(MyColor& color, float xCur, float yCur, float slLen, float slHeight);
+    Vert GetSlotCoords(int groupIdx, int rowIdx, float ySlOrigin);
+
+    LightArc arc;
+    MovingDice movingDice;
+    ShakingSlot shakingSlot;
 
     GLuint textureNames[COUNT_TEX_NAMES];
     void StartupTextures();
@@ -29,14 +34,7 @@ public:
     void PrepareShaders();
     void EnableTransparancy();
     void PrepareFont();
-
-    LightArc arc;
     void PrepareArc(Player& player);
-
-    MovingDice movingDice;
-
-    ShakingSlot shakingSlot;
-
     bool DoneShaking();
 
     void ChangeTexture(int idxTx);

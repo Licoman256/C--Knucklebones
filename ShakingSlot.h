@@ -1,37 +1,34 @@
 #pragma once
-#include "render.h"
+#include "player.h"
 
-class ShakingSlot: public AnimatingPhase {
+class ShakingSlot: public RenderElement, public AnimatingPhase {
 	class Field* field = nullptr;
 public:
-	void Animate(float deltaTime);
-	bool DoneAnimating();
-	void Reset();
-
 	ShakingSlot();
 	void Bind(Field* _field);
 
-	void Render(MyColor color);
-	bool CheckIfInited();
-	void Init(float x, float y);
+	virtual void Render();
+	virtual void Animate(float deltaTime);
+	virtual bool DoneAnimating();
+	virtual void Reset();
 
-	float GetXOrig();
-	float GetYOrig();
+	void SetParams(Player& player, int rwIdx, int grIdx, MyColor clr, float yPlayerPos, int shakingDirection, float _maxTime);
+	bool LaysUpon(int group, int row, bool playerIsActive);
 
 	~ShakingSlot();
 private:
+	float xShakeIntensity;
+	float yShakeIntensity;
+	int shakingDirection = -1; // +1/-1
 
-	const float YShakeIntensity = 0.3f;
-	const float XShakeIntensity = 0.3f;
-	// [s]
-	float maxTime = 0.15;
-	float curTime = 0.f;
+	float maxTime = 0.5f; // [s]
+	float curTime = 0.f;   // [s]
 
-	float xPos;
-	float yPos;
-
-	float xOrig;
-	float yOrig;
-
-	bool isInited = false;
+	const Dice *dice = nullptr;
+	int rowIdx;
+	int groupIdx;
+	MyColor color;
+	float yPlayerPos;
+	Vert GetShakingOffsets();
+	void ClearTarget();
 };

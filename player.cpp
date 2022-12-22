@@ -100,7 +100,7 @@ bool Group::Add(Dice &toplace) {
 	return false;
 }
 
-void Player::MoveToField() {
+void Player::SetDicesOnField() {
 	groups[addingTo].MoveToField();
 }
 

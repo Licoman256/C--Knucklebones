@@ -62,8 +62,10 @@ void Game::Tick() {
 	case ES_ASK_FOR_RESTART:										break;
 	default:														break;
 	}
-
 	pressedKey = 0;
+
+	// always animate
+	Animate();
 }
 
 void Game::OnThrowDice() {
@@ -118,7 +120,7 @@ void Game::OnMoveToField() {
 	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
-		players[curPlayerIdx].MoveToField();
+		players[curPlayerIdx].SetDicesOnField();
 		field.movingDice.Reset();
 		mainState = ES_SLOT_SHAKING;
 	}
@@ -127,7 +129,6 @@ void Game::OnMoveToField() {
 void Game::OnSlotShaking() {
 	if (field.shakingSlot.DoneAnimating()) {
 		players[curPlayerIdx].RecalcScore();
-
 		field.shakingSlot.Reset();
 		mainState = ES_DESTROY_DICES;
 	}
@@ -241,7 +242,7 @@ void Game::Render() {
 	field.RenderCommon(window);
 
 	// other depends on the main state
-	FillRQueue();
+	FillRendQueue();
 	for (auto rElem : rQueue) {
 		rElem->Render();
 	}
@@ -250,16 +251,7 @@ void Game::Render() {
 	glfwSwapBuffers(window);
 }
 
-void Game::Animate() {
-	// how much time is spent
-	deltaTime = ChronoRound() / 1000.f;
-	FillAQueue();
-	for (auto aElem : aQueue) {
-		aElem->Animate(deltaTime);
-	}
-}
-
-void Game::FillRQueue() {
+void Game::FillRendQueue() {
 	rQueue.clear();
 
 	// do we need players?
@@ -270,16 +262,30 @@ void Game::FillRQueue() {
 	}
 
 	if (mainState == ES_MOVE_DICE_TO_FIELD) {
+		rQueue.push_back(&field.shakingSlot);
 		rQueue.push_back(&field.arc);
 		rQueue.push_back(&field.movingDice);
 	}
 	
+	if (mainState == ES_SLOT_SHAKING) {
+		rQueue.push_back(&field.shakingSlot);
+	}
+
 	// 
 	// fill render queue depending on main state
 	// popup.Render();
 }
 
-void Game::FillAQueue() {
+void Game::Animate() {
+	// how much time is spent
+	deltaTime = ChronoRound() / 1000.f;
+	FillAnimQueue();
+	for (auto aElem : aQueue) {
+		aElem->Animate(deltaTime);
+	}
+}
+
+void Game::FillAnimQueue() {
 	aQueue.clear();
 
 	if (mainState == ES_MOVE_DICE_TO_FIELD) {
