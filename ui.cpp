@@ -51,7 +51,7 @@ GLFWwindow* Field::CreateWindow() {
 }
 
 
-void Field::StartupTextures() {
+void TexDic::StartupTextures() {
 	// generate names
 	glGenTextures(COUNT_TEX_NAMES, textureNames);
 
@@ -60,7 +60,7 @@ void Field::StartupTextures() {
 	LoadTexture(E_FIELD,      textFileNames[E_FIELD]);
 }
 
-void Field::LoadMainBlockTex() {
+void TexDic::LoadMainBlockTex() {
 
 	// load for each
 	for (int i = E_SLOT; i < TEXTURE_LAST; i++) {
@@ -71,7 +71,7 @@ void Field::LoadMainBlockTex() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-bool Field::LoadTexture(int idxTx, char const* filename) {
+bool TexDic::LoadTexture(int idxTx, char const* filename) {
 
 	int widthImg, heightImg, numColCh;
 	unsigned char* bytes = stbi_load(filename, &widthImg, &heightImg, &numColCh, 0);
@@ -100,12 +100,12 @@ bool Field::LoadTexture(int idxTx, char const* filename) {
 	return true;
 }
 
-void Field::EnableTransparancy() {
+void TexDic::EnableTransparancy() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
 }
 
-void Field::PrepareShaders() {
+void TexDic::PrepareShaders() {
 
 }

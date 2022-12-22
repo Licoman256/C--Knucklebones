@@ -6,8 +6,22 @@
 
 // Texture Dictionary
 class TexDic {
+    bool LoadTexture(int idxTx, char const* filename);
 public:
-    int dummy;
+    GLuint textureNames[COUNT_TEX_NAMES];
+    void StartupTextures();
+    void LoadMainBlockTex();
+    void PrepareShaders();
+    void EnableTransparancy();
+    void PrepareFont();
+
+    void ChangeTexture(int idxTx);
+    void RenderTexture(Vert& rectangleStart,
+                       Vert& rectangleFinish,
+                       const MyColor& color,
+                       int idxTx,
+                       Vert texStart = { 0, 0 },
+                       Vert texFinish = { 1, 1 });
 
 };
 
@@ -27,23 +41,10 @@ public:
     LightArc arc;
     MovingDice movingDice;
     ShakingSlot shakingSlot;
-
-    GLuint textureNames[COUNT_TEX_NAMES];
-    void StartupTextures();
-    void LoadMainBlockTex();
-    void PrepareShaders();
-    void EnableTransparancy();
-    void PrepareFont();
+    
     void PrepareArc(Player& player);
     bool DoneShaking();
 
-    void ChangeTexture(int idxTx);
-    void RenderTexture(Vert& rectangleStart, 
-                       Vert& rectangleFinish, 
-                       const MyColor& color, 
-                       int idxTx, 
-                       Vert texStart  = { 0, 0 },
-                       Vert texFinish = { 1, 1 }  );
 private:
     struct Layout {
         const void* key;
@@ -64,6 +65,4 @@ private:
 
     bool ChangeColor(const Dice& dice); // not used
     void ChangeDiceColor(int pow, MyColor& color);
-
-    bool LoadTexture(int idxTx, char const* filename);
 };

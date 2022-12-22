@@ -97,12 +97,12 @@ bool Field::DoneShaking() {
     return true;
 }
 
-void Field::ChangeTexture(int idxTx) {
+void TexDic::ChangeTexture(int idxTx) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureNames[idxTx]);
 }
 
-void Field::RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish) {
+void TexDic::RenderTexture(Vert &rectangleStart, Vert &rectangleFinish, const MyColor& color, int idxTx, Vert texStart, Vert texFinish) {
 
     glColor3f(color.red, color.green, color.blue);
     ChangeTexture(idxTx);
