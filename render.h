@@ -95,7 +95,7 @@ public:
     const int WINDOW_HEIGHT = 800;
 };
 
-class AnimatingPhase {
+class Animated {
 public:
     virtual void Animate(float deltaTime) = 0;
     virtual bool DoneAnimating() = 0;

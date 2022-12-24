@@ -23,7 +23,7 @@ private:
 	int multiplier;
 };
 
-class MovingDice : public RenderElement, public AnimatingPhase {
+class MovingDice : public RenderElement, public Animated {
 public:
 	virtual void Animate(float deltaTime);
 	virtual bool DoneAnimating();

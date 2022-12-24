@@ -1,7 +1,7 @@
 #pragma once
 #include "player.h"
 
-class ShakingSlot: public RenderElement, public AnimatingPhase {
+class ShakingSlot: public RenderElement, public Animated {
 	class Field* field = nullptr;
 public:
 	ShakingSlot();
@@ -23,6 +23,8 @@ private:
 
 	float maxTime = 0.5f; // [s]
 	float curTime = 0.f;   // [s]
+
+	Vert shakenPos;
 
 	const Dice *dice = nullptr;
 	int rowIdx;

@@ -35,13 +35,11 @@ private:
     bool doneGlfwInit = false;
     GLFWwindow* window = nullptr;
     Field field;
-    std::deque< RenderElement* >  rQueue;
+    std::deque< RenderElement* >  renderQ;
     void Render();
-    void FillRendQueue();
 
-    std::deque< AnimatingPhase* > aQueue;
+    std::deque< Animated* > animQ;
     void Animate();
-    void FillAnimQueue();
 
     // states
     void OnStartup();
@@ -54,7 +52,8 @@ private:
     MainState mainState = ES_STARTUP;
     float deltaTime = 0.f;
 
-    void Tick();
+    void FillQueues();
+    void OperateFSM();
     void OnThrowDice();
     void AnnounceRound();
     void OnAISelectKeyToPress();

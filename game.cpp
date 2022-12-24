@@ -42,30 +42,49 @@ u64 ChronoRound() {
 	return delta;
 }
 
+void Game::FillQueues() {
+	renderQ.clear();
+	animQ.clear();
 
-void Game::Tick() {
-	// do FSM
+	// do we render players?
+	if (ES_ANNOUNCE_ROUND < mainState && mainState <= ES_GAME_END_DRAW) {
+		for (auto& player : players) {
+			renderQ.push_back(&player);
+		}
+	}
+
+	// move => several more elements
+	if (mainState == ES_MOVE_DICE_TO_FIELD) {
+		renderQ.push_back(&field.shakingSlot);
+		renderQ.push_back(&field.arc);			animQ.push_back(&field.arc);
+		renderQ.push_back(&field.movingDice);	animQ.push_back(&field.movingDice);
+	}
+
+	// shaking
+	if (mainState == ES_SLOT_SHAKING) {
+		renderQ.push_back(&field.shakingSlot);	animQ.push_back(&field.shakingSlot);
+	}
+}
+
+void Game::OperateFSM() {
 	switch (mainState) {
-	case ES_STARTUP:              OnStartup();				        break;
- 	case ES_ANNOUNCE_ROUND:		  AnnounceRound();					break;
-	case ES_THROW_DICE:			  OnThrowDice();					break;
-	case ES_AI_INPUT:			  OnAISelectKeyToPress();			// no break
-	case ES_WAIT_PLAYER_INPUT:	  HandlePressedKey();			    break;
-	case ES_MOVE_DICE_TO_FIELD:	  OnMoveToField();					break;
-	case ES_SLOT_SHAKING:		  OnSlotShaking();					break;
-	case ES_DESTROY_DICES:		  OnDestroyDices();					break;
-	case ES_REODER_IN_GROUPS:	  OnReorderInGroups();				break;
-	case ES_UPDATE_SCORE:		  OnUpdateScore();			        break;
-	case ES_CHANGE_ACTIVE_PLAYER: ChangeActivePlayer();				break;
-	case ES_GAME_END_WIN:											break;
-	case ES_GAME_END_DRAW:											break;
-	case ES_ASK_FOR_RESTART:										break;
-	default:														break;
+		case ES_STARTUP:              OnStartup();				break;
+ 		case ES_ANNOUNCE_ROUND:		  AnnounceRound();			break;
+		case ES_THROW_DICE:			  OnThrowDice();			break;
+		case ES_AI_INPUT:			  OnAISelectKeyToPress();	// no break
+		case ES_WAIT_PLAYER_INPUT:	  HandlePressedKey();		break;
+		case ES_MOVE_DICE_TO_FIELD:	  OnMoveToField();			break;
+		case ES_SLOT_SHAKING:		  OnSlotShaking();			break;
+		case ES_DESTROY_DICES:		  OnDestroyDices();			break;
+		case ES_REODER_IN_GROUPS:	  OnReorderInGroups();		break;
+		case ES_UPDATE_SCORE:		  OnUpdateScore();			break;
+		case ES_CHANGE_ACTIVE_PLAYER: ChangeActivePlayer();		break;
+		case ES_GAME_END_WIN:									break;
+		case ES_GAME_END_DRAW:									break;
+		case ES_ASK_FOR_RESTART:								break;
+		default:												break;
 	}
 	pressedKey = 0;
-
-	// always animate
-	Animate();
 }
 
 void Game::OnThrowDice() {
@@ -116,7 +135,7 @@ void Game::HandlePressedKey() {
 
 void Game::OnMoveToField() {
 	// play animation
-	field.arc.Animate(deltaTime);
+	//field.arc.Animate(deltaTime);
 	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
@@ -127,6 +146,7 @@ void Game::OnMoveToField() {
 }
 
 void Game::OnSlotShaking() {
+	// done => next state
 	if (field.shakingSlot.DoneAnimating()) {
 		players[curPlayerIdx].RecalcScore();
 		field.shakingSlot.Reset();
@@ -242,8 +262,7 @@ void Game::Render() {
 	field.RenderCommon(window);
 
 	// other depends on the main state
-	FillRendQueue();
-	for (auto rElem : rQueue) {
+	for (auto rElem : renderQ) {
 		rElem->Render();
 	}
 
@@ -251,51 +270,12 @@ void Game::Render() {
 	glfwSwapBuffers(window);
 }
 
-void Game::FillRendQueue() {
-	rQueue.clear();
-
-	// do we need players?
-	if (ES_ANNOUNCE_ROUND < mainState && mainState <= ES_GAME_END_DRAW) {
-		for (auto& player : players) {
-			rQueue.push_back(&player);
-		}
-	}
-
-	if (mainState == ES_MOVE_DICE_TO_FIELD) {
-		rQueue.push_back(&field.shakingSlot);
-		rQueue.push_back(&field.arc);
-		rQueue.push_back(&field.movingDice);
-	}
-	
-	if (mainState == ES_SLOT_SHAKING) {
-		rQueue.push_back(&field.shakingSlot);
-	}
-
-	// 
-	// fill render queue depending on main state
-	// popup.Render();
-}
-
 void Game::Animate() {
 	// how much time is spent
 	deltaTime = ChronoRound() / 1000.f;
-	FillAnimQueue();
-	for (auto aElem : aQueue) {
+	for (auto aElem : animQ) {
 		aElem->Animate(deltaTime);
 	}
-}
-
-void Game::FillAnimQueue() {
-	aQueue.clear();
-
-	if (mainState == ES_MOVE_DICE_TO_FIELD) {
-		aQueue.push_back(&field.movingDice);
-	}
-
-	if (mainState == ES_SLOT_SHAKING) {
-		aQueue.push_back(&field.shakingSlot);
-	}
-
 }
 
 void Game::End() {

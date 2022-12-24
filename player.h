@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <queue>
-#include "render.h"
 #include "dice.h"
 
 class Group {

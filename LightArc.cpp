@@ -44,7 +44,7 @@ void LightArc::DebugRenderArc() {
 #endif // DEBUG_ARC_RENDER
 }
 
-Vert Field::GetSlotCoords(int groupIdx, int rowIdx, float ySlOrigin) {
+Vert Field::GetSlotCenter(int groupIdx, int rowIdx, float ySlOrigin) {
 	Vert slotCoords;
 	slotCoords.x = xSlotOrigin + groupIdx * (xOffset + slotLen)     + slotLen    * .5f;
 	slotCoords.y = ySlOrigin   - rowIdx   * (yOffset + slotHeight)  - slotHeight * .5f;
@@ -62,7 +62,7 @@ void Field::PrepareArc(Player& player) {
 	// end
 	auto groupIdx = player.addingTo;
 	auto rowIdx = player.groups[groupIdx].addingTo;
-	Vert slotCoords = GetSlotCoords(groupIdx, rowIdx, layout.ySlotOrigin);
+	Vert slotCoords = GetSlotCenter(groupIdx, rowIdx, layout.ySlotOrigin);
 
 	// relay
 	arc.Prepare(boxCoords, slotCoords);

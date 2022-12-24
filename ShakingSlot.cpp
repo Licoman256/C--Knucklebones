@@ -21,30 +21,29 @@ void ShakingSlot::Bind(Field* _field) {
 }
 
 void ShakingSlot::Animate(float deltaTime) {
-	// debug
-	//deltaTime = 0.01f;
-
-	//float xShift = deltaTime * xShakeIntensity;
-	//float yShift = deltaTime * yShakeIntensity;
-
-	//xPos = xOrig + xShift;
-	//yPos = yOrig + yShift;
 	curTime += deltaTime;
+	Vert shake = GetShakingOffsets();
 
-	//float lenShift = -startLen * (1 - minLenCoeff) * 2 / maxTime;
-	//float heightShift = -startHeight * (1 - minHeightCoeff) * 2 / maxTime;
-	//if (curTime >= maxTime / 2 && !growing) {
-	//	lenShift = -lenShift;
-	//	heightShift = -heightShift;
-	//	growing = true;
-	//}
+	Vert pos = field->GetSlotCenter(groupIdx, rowIdx, yPlayerPos);
+	float xCur = pos.x - slotLen * .5f;
+	float yCur = pos.y + slotHeight * .5f;
 
-	//len += lenShift;
-	//height += heightShift;
-	//
-	//xPos += (startLen - len) / 2;
-	//yPos -= (startHeight - height) / 2;
+	shakenPos = {
+		xCur + shake.x,
+		yCur + shake.y
+	};
+}
 
+Vert ShakingSlot::GetShakingOffsets() {
+	const float eps = 1e-6f;
+	float aaa = curTime * 3.14f * (groupIdx + 1) / maxTime;
+	if (aaa < eps) {
+		return { 0, 0 };
+	}
+
+	float shift = abs(sinf(aaa) / sqrt(aaa));
+	return { shift * xShakeIntensity,
+			 shift * yShakeIntensity * shakingDirection };
 }
 
 bool ShakingSlot::DoneAnimating() {
@@ -76,29 +75,15 @@ void ShakingSlot::SetParams(Player& player, int rwIdx, int grIdx, MyColor clr, f
 
 	xShakeIntensity = maxTime / 15;
 	yShakeIntensity = maxTime / 15;
+
+	Animate(0.f);
 }
 
 void ShakingSlot::Render() {
 	// slot with its dice
-	Vert pos = field->GetSlotCoords(groupIdx, rowIdx, yPlayerPos);
-	float xCur = pos.x - slotLen / 2;
-	float yCur = pos.y + slotHeight / 2;
-	
-	Vert shake = GetShakingOffsets();
-	xCur += shake.x;
-	yCur += shake.y;
-
-	field->RenderSlot(color, xCur, yCur, slotLen, slotHeight);
+	field->RenderSlot(color, shakenPos.x, shakenPos.y, slotLen, slotHeight);
 	if (dice && dice->IsOnField()) {
-		field->Render(*dice, xCur, yCur);
+		field->Render(*dice, shakenPos.x, shakenPos.y);
 	}
 }
 
-Vert ShakingSlot::GetShakingOffsets() {
-	float aaa = curTime * 3.14f * (groupIdx + 1) / maxTime;
-	if (aaa) {
-		float shift = abs(sinf(aaa) / sqrt(aaa));
-		return { shift * xShakeIntensity, shift * yShakeIntensity * shakingDirection };
-	}
-	return { 0, 0 };
-}

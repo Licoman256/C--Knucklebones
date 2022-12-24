@@ -49,7 +49,7 @@ void MovingDice::Reset() {
 }
 
 bool MovingDice::DoneAnimating() {
-	return arc->DoneAnimating(travelDist);
+	return travelDist >= arc->GetTotalDistance();
 }
 
 void MovingDice::Animate(float deltaTime) {
@@ -76,11 +76,8 @@ void MovingDice::Render() {
 	field->Render(dummy, xSlotStart, ySlotStart);
 }
 
-bool LightArc::DoneAnimating(float travelDist) {
-	if (travelDist >= elems[COUNT_QUADS - 1].trvDist) {
-		return true;
-	}
-	return false;
+float LightArc::GetTotalDistance() {
+	return elems[COUNT_QUADS - 1].trvDist;
 }
 
 // linear interpolation

@@ -36,7 +36,7 @@ public:
     void Render(const Player& player);
     void Render(const Dice& dice, float xCur, float yCur);
     void RenderSlot(MyColor& color, float xCur, float yCur, float slLen, float slHeight);
-    Vert GetSlotCoords(int groupIdx, int rowIdx, float ySlOrigin);
+    Vert GetSlotCenter(int groupIdx, int rowIdx, float ySlOrigin);
 
     LightArc arc;
     MovingDice movingDice;

@@ -1,15 +1,16 @@
 #pragma once
 #include "render.h"
 
-class LightArc : public RenderElement {
+class LightArc : public RenderElement, public Animated {
 	virtual void Render(void);
 	void DebugRenderArc();
 	class Field* field = nullptr;
 public:
+	virtual void Animate(float deltaTime);
+	virtual bool DoneAnimating() { return false; }
+	virtual void Reset() {}
 
-	void Animate(float deltaTime);
-	bool DoneAnimating(float travelDist);
-
+	float GetTotalDistance();
 	void Bind(Field* _field);
 	static const int COUNT_QUADS = 50;
 	void Prepare(Vert start, Vert end);

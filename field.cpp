@@ -152,18 +152,6 @@ void Field::Render(const Player& player) {
     }
 }
 
-//shakingSlot.Render(lay.color);
-//            // may render dice over the slot
-//if (dice.IsOnField()) {
-//    Render(dice, xCur, yCur);
-//} else {
-//    // save slot coordinates that has a dice being added to it
-//    if (dice.GetValue() && !shakingSlot.IsInited()) {
-//        shakingSlot.Init(xCur, yCur, slotLen, slotHeight);
-//    }
-//}
-
-
 void Field::Render(int score, float xCur, float yCur) {
     // count digits
     float numOfDigits = (score == 0 ? 1.f : 0.f);
@@ -230,6 +218,10 @@ void Field::ChangeDiceColor(int pow, MyColor& color) {
 }
 
 void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
+   // glPushMatrix();
+   // glTranslatef( slotStartX / 2, slotStartY / 2, 0); // M1 - 2nd translation
+   // glRotatef(30, 0.0f, 0.0f, 1.0f);                  // M2
+   // glTranslatef(-slotStartX / 2, -slotStartY / 2, 0);  // M3 - 1st translation
     auto value = dice.GetValue();
     if (!value) {
         return;
@@ -238,7 +230,7 @@ void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
 
     // shrink the slot
     float reducedSlotStartX = slotStartX + slotLen    * (1 - diceSlotOccupation) / 2;
-    float reducedSlotStartY = slotStartY - slotHeight * (1 - diceSlotOccupation) / 2;
+    float reducedSlotStartY = slotStartY - slotHeight * (1 - diceSlotOccupation) / 2 ; // + dice.fallProgress * slotHeight
 
     // select where an offset is
     float diceOffsetX  = (reducedSlotLen - reducedSlotHeight * dimCoef) / 2;
@@ -255,4 +247,6 @@ void Field::Render(const Dice &dice, float slotStartX, float slotStartY) {
     MyColor color;
     ChangeDiceColor(dice.GetMul(), color);
     RenderTexture(start, finish, color, E_DICE_1 + digit);
+
+   // glPopMatrix();
 }
