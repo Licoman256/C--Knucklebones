@@ -46,6 +46,7 @@ enum {
     E_SLOT,
     E_NUMBERS,
     E_LIGHTNING,
+    E_DEBUG_YELLOW,
     E_DICE_1,
     E_DICE_2,
     E_DICE_3,

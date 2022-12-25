@@ -134,9 +134,6 @@ void Game::HandlePressedKey() {
 }
 
 void Game::OnMoveToField() {
-	// play animation
-	//field.arc.Animate(deltaTime);
-	
 	// done => next state
 	if (field.movingDice.DoneAnimating()) {
 		players[curPlayerIdx].SetDicesOnField();

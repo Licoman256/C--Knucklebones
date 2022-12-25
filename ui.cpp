@@ -25,6 +25,7 @@ static char const* textFileNames[TEXTURE_LAST] = {
 	"data/slot.png",
 	"data/numbers.png",
 	"data/lightning.png",
+	"data/D-lightning.png",
 	"data/dice1.png",
 	"data/dice2.png",
 	"data/dice3.png",

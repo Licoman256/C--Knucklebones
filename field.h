@@ -41,7 +41,8 @@ public:
     LightArc arc;
     MovingDice movingDice;
     ShakingSlot shakingSlot;
-    
+    //std::vector<KillingRay> killingRays;
+
     void PrepareArc(Player& player);
     bool DoneShaking();
 

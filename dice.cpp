@@ -91,9 +91,9 @@ Vert LightArc::GetPoint(float travelDist) {
 	int quadIdx;
 	float fraction;
 	ConvertTravelDist(travelDist, quadIdx, fraction);
-	assert(quadIdx < COUNT_QUADS);
 
 	// lerp
+	assert(quadIdx < COUNT_QUADS - 1);
 	Vert result = { Lerp(elems[quadIdx].side.md.x, fraction, elems[quadIdx + 1].side.md.x),
 					Lerp(elems[quadIdx].side.md.y, fraction, elems[quadIdx + 1].side.md.y) };
 
@@ -101,6 +101,7 @@ Vert LightArc::GetPoint(float travelDist) {
 }
 
 void LightArc::ConvertTravelDist(float travelDist, int& quadIdx, float& fraction) {
+	// find within
 	for (int i = 0; i < COUNT_QUADS; i++) {
 		if (elems[i].trvDist > travelDist) {
 			quadIdx = i - 1;
@@ -109,6 +110,8 @@ void LightArc::ConvertTravelDist(float travelDist, int& quadIdx, float& fraction
 			return;
 		}
 	}
-	quadIdx = COUNT_QUADS - 1;
-	fraction = 0;		
+
+	// past the end
+	quadIdx = COUNT_QUADS - 2;
+	fraction = 1.f;
 }

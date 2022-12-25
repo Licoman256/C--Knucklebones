@@ -7,6 +7,7 @@ enum MainState {
     ES_STARTUP,
         // within one session:
         ES_ANNOUNCE_ROUND,
+            ES_BLIND_MOVES,
             // within a round:
             ES_THROW_DICE,
             ES_AI_INPUT,

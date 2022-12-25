@@ -12,7 +12,12 @@ void LightArc::Render() {
 	MyColor color = colors::white;
 	glColor3d(color.red, color.green, color.blue);
 
-	field->ChangeTexture(E_LIGHTNING);
+	#ifdef DEBUG_ARC_RENDER
+		field->ChangeTexture(E_DEBUG_YELLOW);
+	#else
+		field->ChangeTexture(E_LIGHTNING);
+	#endif
+
 	glBegin(GL_QUAD_STRIP);
 		for (int i = 0; i < COUNT_QUADS; i++) {
 			glTexCoord2f(elems[i].tex, 0); glVertex2f(elems[i].side.dn.x, elems[i].side.dn.y);
@@ -26,20 +31,28 @@ void LightArc::Render() {
 
 void LightArc::DebugRenderArc() {
 #ifdef DEBUG_ARC_RENDER
-	glColor3d(0, 0, 0);
 
 	glBegin(GL_LINES);
+
+	glColor3d(0, 0, 0);
 	for (int i = 0; i < COUNT_QUADS; i++) {
-		glVertex2f(dnSide[i].x, dnSide[i].y);
-		glVertex2f(upSide[i].x, upSide[i].y);
+		glVertex2f(elems[i].side.dn.x, elems[i].side.dn.y);
+		glVertex2f(elems[i].side.up.x, elems[i].side.up.y);
 
 		if (i < COUNT_QUADS - 1) {
-			auto midStart = GetPoint((float)i);
-			auto midEnd = GetPoint((float)i + .95f);
-			glVertex2f(midStart.x, midStart.y);
-			glVertex2f(midEnd.x, midEnd.y);
+			glVertex2f(elems[i].side.md.x,   elems[i].side.md.y);
+			glVertex2f(elems[i+1].side.md.x, elems[i+1].side.md.y);
 		}
 	}
+
+	glColor3d(1, 0, 1);
+	glVertex2f(srcStart.x, srcStart.y + 0.01f);
+	glVertex2f(srcStart.x, srcStart.y);
+	glVertex2f(srcStart.x, srcStart.y);
+	glVertex2f(srcEnd.x, srcEnd.y);
+	glVertex2f(srcEnd.x, srcEnd.y);
+	glVertex2f(srcEnd.x, srcEnd.y + 0.01f);
+
 	glEnd();
 #endif // DEBUG_ARC_RENDER
 }
@@ -83,6 +96,9 @@ int LightArc::GetGravitySign() {
 };
 
 void LightArc::Prepare(Vert start, Vert end) {
+	srcStart = start;
+	srcEnd = end;
+
 	Vert target { (end.x - start.x) ,
 				 (end.y - start.y) };
 
@@ -92,16 +108,17 @@ void LightArc::Prepare(Vert start, Vert end) {
 	// calc initial velocity 
 	// - we will simulate one sec in each loop iteration
 	Vert velocity;
-	float travelDist = (COUNT_QUADS - 1);
-	velocity.x = target.x / travelDist;
-	float verticalShift = gravity * 0.5f * travelDist * travelDist;
-	velocity.y = (target.y + verticalShift) / travelDist;
+	float travelTime = (COUNT_QUADS - 1);
+	velocity.x = target.x / travelTime;
+	float verticalShift = gravity * 0.5f * travelTime * travelTime;
+	velocity.y = (target.y + verticalShift) / travelTime;
 
 	// current point is going to travel from start to end
 	Vert curPoint = start;
 	FillTrajectotyPoint(0, velocity, velocity, curPoint);
 	elems[0].trvDist = 0;
 	elems[0].tex = 0.0f;
+	velocity.y -= gravity * 0.5f;
 
 	for (int i = 1; i < COUNT_QUADS; i++) {
 		// step by velocity 
@@ -155,7 +172,7 @@ void LightArc::FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& veloc
 	// narrow at the start and at the end
 	float narrow = 1.f;
 	auto countTail = COUNT_QUADS / 3;
-	auto revIdx = COUNT_QUADS - i;
+	auto revIdx = COUNT_QUADS - 1 - i;
 	if (i < countTail) {
 		narrow = 0.1f + 0.9f * i / countTail;
 	} else if (revIdx < countTail) {

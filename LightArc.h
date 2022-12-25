@@ -34,6 +34,8 @@ private:
 	};
 	ArcElem elems[COUNT_QUADS];
 
+	Vert srcStart, srcEnd;
+
 	void FillTrajectotyPoint(int i, const Vert& nextVel, const Vert& velocity, const Vert& nextPoint);
 	void ConvertTravelDist(float travelDist, int& quadIdx, float& fraction);
 };
